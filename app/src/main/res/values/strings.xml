@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Phone Locker</string>
+    <string name="app_description">This app enables/disables Android Device Policy Manager to allow app to lock screen</string>
+</resources>
