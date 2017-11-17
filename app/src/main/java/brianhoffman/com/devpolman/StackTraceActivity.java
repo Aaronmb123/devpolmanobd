@@ -17,8 +17,10 @@ public class StackTraceActivity extends AppCompatActivity {
 
         mStackTraceTV = (TextView) findViewById(R.id.stacktrace_text_view);
 
-        mStacktrace = getIntent().getStringExtra();
-        mStackTraceTV.setText(mStacktrace);
+        //mStacktrace = getIntent().getStringExtra();
+        //mStackTraceTV.setText(mStacktrace);
+
+        mStackTraceTV.setText("stacktrace blah blah blah");
 
     }
 }

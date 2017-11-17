@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,15 +23,23 @@ public class MainActivity extends AppCompatActivity {
     private PendingIntent pendingIntent;
     private AlarmManager manager;
 
-
     static final int RESULT_ENABLE = 1;
     private static DevicePolicyManager mDevicePolicyManager;
     ComponentName mComponentName;
+
+//    private ServiceToActivity serviceReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        mStackTraceTV = (TextView) findViewById(R.id.stacktrace_text_view);
+
+        // create receiver to get stack trace from alarmReceiver
+//        serviceReceiver = new ServiceToActivity();
+//        IntentFilter intentSFiler = new IntentFilter("ServiceToActivity");
+//        registerReceiver(serviceReceiver, intentSFiler);
 
         // Retrieve a PendingIntent that will perform a broadcast
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
@@ -97,5 +106,22 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
         }
     }
+
+//    @Override
+//    protected void onDestroy() {
+//        unregisterReceiver(serviceReceiver);
+//        super.onDestroy();
+//    }
+
+//    public class ServiceToActivity extends BroadcastReceiver
+//    {
+//        @Override
+//        public void onReceive(Context context, Intent intent)
+//        {
+//            Bundle notificationData = intent.getExtras();
+//            String stacktrace = notificationData.getString("ServiceToActivityKey");
+//            mStackTraceTV.setText(stacktrace);
+//        }
+//    }
 
 }
