@@ -17,7 +17,6 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     Button mButtonEnable;
-    Button mButtonLock;
     private PendingIntent pendingIntent;
     private AlarmManager manager;
 
@@ -36,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
         mButtonEnable = (Button) findViewById(R.id.button_enable);
-        mButtonLock = (Button) findViewById(R.id.button_lock);
 
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         mComponentName = new ComponentName(MainActivity.this, Controller.class);
@@ -44,10 +42,8 @@ public class MainActivity extends AppCompatActivity {
         boolean active = mDevicePolicyManager.isAdminActive(mComponentName);
         if (active) {
             mButtonEnable.setText("Disable");
-            mButtonLock.setVisibility(View.VISIBLE);
         } else {
             mButtonEnable.setText("Enable");
-            mButtonLock.setVisibility(View.GONE);
         }
 
         mButtonEnable.setOnClickListener(new View.OnClickListener() {
@@ -57,20 +53,12 @@ public class MainActivity extends AppCompatActivity {
                 if (active) {
                     mDevicePolicyManager.removeActiveAdmin(mComponentName);
                     mButtonEnable.setText("Enable");
-                    mButtonLock.setVisibility(View.GONE);
                 } else {
                     Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
                     intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
                     intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Please enable app");
                     startActivityForResult(intent, RESULT_ENABLE);
                 }
-            }
-        });
-
-        mButtonLock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mDevicePolicyManager.lockNow();
             }
         });
     }
@@ -85,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
             case RESULT_ENABLE:
                 if (resultCode == Activity.RESULT_OK) {
                     mButtonEnable.setText("Disable");
-                    mButtonLock.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
                 }
@@ -96,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startAlarm(View view) {
         manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        int interval = 1000;
+        int interval = 10000;
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
         Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
