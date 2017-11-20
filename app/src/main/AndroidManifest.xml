@@ -21,8 +21,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name="brianhoffman.com.devpolman.ServiceToActivity"/>
-
         <receiver
             android:name=".Controller"
             android:description="@string/app_description"
