@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -24,46 +25,58 @@ import java.util.Set;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private final static String OBD_NAME = "OBDII";
-
-    private BluetoothSocket mSocket;
-    private BluetoothDevice mDevice;
-    private BluetoothAdapter mBluetoothAdapter;
-    private Set<BluetoothDevice> mPairedDevices;
-
-    private InputStream mInputStream;
-    private OutputStream mOutputStream;
-    private StringBuilder mStrBuffer = new StringBuilder();
-
-    private boolean mBluetoothConnected;
-    private boolean mSpeedOverZero;
-
-    private boolean mTest = true;
-
     @Override
     public void onReceive(Context arg0, Intent arg1) {
-        // For our recurring task, we'll just display a message
+
+
+
+        try {
+            new obdQueryTask(arg0).execute();
+        } catch (Exception e) {
+            return;
+        }
+
         //Toast.makeText(arg0, "I'm running", Toast.LENGTH_SHORT).show();
-        //MainActivity activity = (MainActivity) arg0;
-
-
-
-
-
 
     }
 
-    private class obdQuery extends AsyncTask<Context, Void, Void> {
+    private class obdQueryTask extends AsyncTask<Void, Void, Void> {
+
+        private Context mContext;
+        private final static String OBD_NAME = "OBDII";
+
+        private BluetoothSocket mSocket;
+        private BluetoothDevice mDevice;
+        private BluetoothAdapter mBluetoothAdapter;
+        private Set<BluetoothDevice> mPairedDevices;
+
+        private InputStream mInputStream;
+        private OutputStream mOutputStream;
+        private StringBuilder mStrBuffer = new StringBuilder();
+
+        private boolean mBluetoothConnected;
+        private boolean mSpeedOverZero;
+
+        public obdQueryTask(Context context) {
+            mContext = context;
+        }
+
         @Override
-        protected Void doInBackground(Context arg0) {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //Toast.makeText(mContext, "async running", Toast.LENGTH_SHORT).show();
+            Log.i("+++++++++++++++++++", "async running");
+
             mBluetoothConnected = false;
             mSpeedOverZero = false;
 
-            // check if device locked already
-            //if(mBluetoothConnected && mSpeedOverZero) return;
-
             // get obd
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            try {
+                mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            } catch (Exception e) {
+                //Toast.makeText(mContext, "no bluetooth", Toast.LENGTH_SHORT).show();
+                return;
+            }
             //mBluetoothAdapter.enable();
             mPairedDevices = mBluetoothAdapter.getBondedDevices();
 
@@ -79,9 +92,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                 // client device must have UUID of server device (server device UUID is random)
                 mSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
             } catch (IOException e) {
-                Toast.makeText(arg0, "no comm", Toast.LENGTH_SHORT).show();
-                return null;
+                //Toast.makeText(mContext, "no comm", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "no comm");
+                return;
             }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.i("+++++++++++++++++++", "do in background");
 
             try {
                 mSocket.connect();
@@ -91,9 +111,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            String s = writer.toString();
 //            for (int i = 0; i < 5; i++)
 //                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-                Toast.makeText(arg0, "no connect", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "no connect", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "no connect");
                 return null;
             }
+
+            Log.i("+++++++++++++++++++", "connected");
 
             try {
                 mInputStream = mSocket.getInputStream();
@@ -103,9 +126,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            String s = writer.toString();
 //            for (int i = 0; i < 5; i++)
 //                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-                Toast.makeText(arg0, "no input stream", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "no input stream", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "no input stream");
                 return null;
             }
+
+            Log.i("+++++++++++++++++++", "got input stream");
 
             try {
                 mOutputStream = mSocket.getOutputStream();
@@ -115,9 +141,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            String s = writer.toString();
 //            for (int i = 0; i < 5; i++)
 //                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-                Toast.makeText(arg0, "no output stream", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "no output stream", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "no output stream");
                 return null;
             }
+
+            Log.i("+++++++++++++++++++", "got output stream");
 
             mBluetoothConnected = true;
 
@@ -130,9 +159,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            String s = writer.toString();
 //            for (int i = 0; i < 5; i++)
 //                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-                Toast.makeText(arg0, "no write reset to output", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "no write reset to output", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "no write reset to output");
                 return null;
             }
+
+            Log.i("+++++++++++++++++++", "written to output");
 
             try {
                 mOutputStream.flush();
@@ -142,22 +174,31 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            String s = writer.toString();
 //            for (int i = 0; i < 5; i++)
 //                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-                Toast.makeText(arg0, "No flush", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "No flush", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "No flush");
             }
+
+            Log.i("+++++++++++++++++++", "flush reset obd");
 
             // set protocol
             try {
                 mOutputStream.write(("AT SP 0\r").getBytes());
             } catch (IOException ieo) {
-                Toast.makeText(arg0, "no write set to output", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "no write set to output", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "no write set to output");
                 return null;
             }
+
+            Log.i("+++++++++++++++++++", "send set protocol");
 
             try {
                 mOutputStream.flush();
             } catch (IOException ieo) {
-                Toast.makeText(arg0, "No flush", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "No flush", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "No flush");
             }
+
+            Log.i("+++++++++++++++++++", "flush set protocol");
 
 //        // send speed command
 //        try {
@@ -171,24 +212,33 @@ public class AlarmReceiver extends BroadcastReceiver {
             try {
                 mOutputStream.write(("01 0C\r").getBytes());
             } catch (IOException e) {
-                Toast.makeText(arg0, "no write rpm cmd to output", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "no write rpm cmd to output", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "no write rpm cmd to output");
                 return null;
             }
+
+            Log.i("+++++++++++++++++++", "send rpm");
 
             try {
                 mOutputStream.flush();
             } catch (IOException ieo) {
-                Toast.makeText(arg0, "No flush", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "No flush", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "No flush");
             }
+
+            Log.i("+++++++++++++++++++", "flush rpm");
 
             // read buffer
 
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
-                Toast.makeText(arg0, "thread sleep error", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "thread sleep error", Toast.LENGTH_SHORT).show();
+                Log.i("+++++++++++++++++++", "thread sleep error");
                 return null;
             }
+
+            Log.i("+++++++++++++++++++", "thread slept");
 
             byte b;
             char c;
@@ -197,7 +247,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 try {
                     b = (byte) mInputStream.read();
                 } catch (IOException e) {
-                    Toast.makeText(arg0, "input read error", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "input read error", Toast.LENGTH_SHORT).show();
+                    Log.i("+++++++++++++++++++", "input read error");
                     return null;
                 }
 
@@ -206,12 +257,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                 mStrBuffer.append(c);
             }
 
+            Log.i("+++++++++++++++++++", mStrBuffer.toString());
+
             // decode
             String speedKphStr = mStrBuffer.substring(mStrBuffer.length() - 2, mStrBuffer.length());
             speedKphStr = "0x" + speedKphStr;
             int speedKph = Integer.decode(speedKphStr);
             if (speedKph > 0)
                 mSpeedOverZero = true;
+
+            Log.i("+++++++++++++++++++", Boolean.toString(mSpeedOverZero));
 
             if (mBluetoothConnected && mSpeedOverZero) {
                 DevicePolicyManager devman = MainActivity.getDevicePolicyManager();
