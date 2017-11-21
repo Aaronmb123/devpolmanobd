@@ -29,6 +29,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context arg0, Intent arg1) {
 
 
+        // TODO if locked return
+        //getStatus() to get the status of your AsyncTask.
+        // If status is AsyncTask.Status.RUNNING then your task is running.
+
 
         try {
             new obdQueryTask(arg0).execute();
@@ -164,7 +168,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 return null;
             }
 
-            Log.i("+++++++++++++++++++", "written to output");
+            Log.i("+++++++++++++++++++", "wrote to output");
 
             try {
                 mOutputStream.flush();
@@ -189,7 +193,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 return null;
             }
 
-            Log.i("+++++++++++++++++++", "send set protocol");
+            Log.i("+++++++++++++++++++", "sent set protocol");
 
             try {
                 mOutputStream.flush();
