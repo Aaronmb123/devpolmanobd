@@ -334,6 +334,15 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.i("+++++++++++++++++++", Boolean.toString(mSpeedOverZero));
 
             if (mBluetoothConnected && mSpeedOverZero) {
+
+                // closing socket before locking allows program to reconnect after unlock
+                // TODO save connection state somehow
+                try {
+                    mSocket.close();
+                } catch (IOException ioe) {
+                    Log.i("+++++++++++++++++++", "no close");
+                }
+
                 DevicePolicyManager devman = MainActivity.getDevicePolicyManager();
                 devman.lockNow();
             }
@@ -341,12 +350,4 @@ public class AlarmReceiver extends BroadcastReceiver {
             return null;
         }
     }
-
-//    private void SendMessageToMainActivity(String stacktrace) {
-//        Intent broadcastIntent = new Intent();
-//        broadcastIntent.setAction("ServiceToActivityAction");
-//        broadcastIntent.putExtra("ServiceToActivityKey", stacktrace);
-//        sendBroadcast(broadcastIntent);
-//    }
-
 }
