@@ -57,6 +57,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         private InputStream mInputStream;
         private OutputStream mOutputStream;
         private StringBuilder mStrBuffer = new StringBuilder();
+        private StringBuilder mResetCmdBuffer = new StringBuilder();
+        private StringBuilder mSetProcBuffer = new StringBuilder();
+        private StringBuilder mRpmCmdBuffer = new StringBuilder();
 
         private boolean mBluetoothConnected;
         private boolean mSpeedOverZero;
@@ -184,10 +187,34 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             Log.i("+++++++++++++++++++", "flush reset obd");
 
-            try { Thread.sleep(500); } catch (InterruptedException e) { e.printStackTrace(); }
+            try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
 
             Log.i("+++++++++++++++++++", "thread slept for obd reset");
 
+            byte b;
+            char c;
+
+            while (true) {
+                try {
+                    b = (byte) mInputStream.read();
+                    Log.i("+++++++++++++++++++", "read reset byte");
+                } catch (IOException e) {
+//                    Toast.makeText(mContext, "input read error", Toast.LENGTH_SHORT).show();
+                    Log.i("+++++++++++++++++++", "input read error");
+                    return null;
+                }
+
+                c = (char) b;
+                Log.i("+++++++++++++++++++", String.valueOf(c));
+
+                if (c == '>') {
+                    Log.i("+++++++++++++++++++", "reset breaking");
+                    break;
+                }
+                mStrBuffer.append(c);
+                Log.i("+++++++++++++++++++", mResetCmdBuffer.toString());
+
+            }
 
             // set protocol
             try {
@@ -209,6 +236,29 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             Log.i("+++++++++++++++++++", "flush set protocol");
 
+            try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
+
+            Log.i("+++++++++++++++++++", "thread slept for obd set proc");
+
+            while (true) {
+                try {
+                    b = (byte) mInputStream.read();
+                    Log.i("+++++++++++++++++++", "read set proc byte");
+                } catch (IOException e) {
+//                    Toast.makeText(mContext, "input read error", Toast.LENGTH_SHORT).show();
+                    Log.i("+++++++++++++++++++", "input read error");
+                    return null;
+                }
+
+                c = (char) b;
+                if (c == '>') {
+                    Log.i("+++++++++++++++++++", "set proc breaking");
+                    break;
+                }
+                mSetProcBuffer.append(c);
+                Log.i("+++++++++++++++++++", mSetProcBuffer.toString());
+
+            }
 //        // send speed command
 //        try {
 //            mOutputStream.write(("01 0D\r").getBytes());
@@ -247,15 +297,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 return null;
             }
 
-            Log.i("+++++++++++++++++++", "thread slept");
-
-            byte b;
-            char c;
+            Log.i("+++++++++++++++++++", "rpm thread slept");
 
             while (true) {
                 try {
                     b = (byte) mInputStream.read();
-                    Log.i("+++++++++++++++++++", "read byte");
+                    Log.i("+++++++++++++++++++", "read rpm byte");
                 } catch (IOException e) {
 //                    Toast.makeText(mContext, "input read error", Toast.LENGTH_SHORT).show();
                     Log.i("+++++++++++++++++++", "input read error");
@@ -263,21 +310,24 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
 
                 c = (char) b;
-                if (c == '<') {
-                    Log.i("+++++++++++++++++++", "breaking");
+                if (c == '>') {
+                    Log.i("+++++++++++++++++++", "rpm breaking");
                     break;
                 }
-                mStrBuffer.append(c);
-                Log.i("+++++++++++++++++++", mStrBuffer.toString());
+                mRpmCmdBuffer.append(c);
+                Log.i("+++++++++++++++++++", mRpmCmdBuffer.toString());
 
             }
 
-            Log.i("++++++++++after loop", mStrBuffer.toString());
+            String speedOutput = mRpmCmdBuffer.toString();
+            Log.i("++++++++++after loop", speedOutput);
 
             // decode
-            String speedKphStr = mStrBuffer.substring(mStrBuffer.length() - 2, mStrBuffer.length());
+            String speedKphStr = speedOutput.substring(speedOutput.length() - 2, speedOutput.length());
             speedKphStr = "0x" + speedKphStr;
             int speedKph = Integer.decode(speedKphStr);
+            Log.i("++++++++++speedKph", String.valueOf(speedKph));
+
             if (speedKph > 0)
                 mSpeedOverZero = true;
 
