@@ -184,6 +184,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             Log.i("+++++++++++++++++++", "flush reset obd");
 
+            try { Thread.sleep(500); } catch (InterruptedException e) { e.printStackTrace(); }
+
+            Log.i("+++++++++++++++++++", "thread slept for obd reset");
+
+
             // set protocol
             try {
                 mOutputStream.write(("AT SP 0\r").getBytes());
@@ -250,6 +255,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             while (true) {
                 try {
                     b = (byte) mInputStream.read();
+                    Log.i("+++++++++++++++++++", "read byte");
                 } catch (IOException e) {
 //                    Toast.makeText(mContext, "input read error", Toast.LENGTH_SHORT).show();
                     Log.i("+++++++++++++++++++", "input read error");
@@ -257,11 +263,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
 
                 c = (char) b;
-                if (c == '<') break;
+                if (c == '<') {
+                    Log.i("+++++++++++++++++++", "breaking");
+                    break;
+                }
                 mStrBuffer.append(c);
+                Log.i("+++++++++++++++++++", mStrBuffer.toString());
+
             }
 
-            Log.i("+++++++++++++++++++", mStrBuffer.toString());
+            Log.i("++++++++++after loop", mStrBuffer.toString());
 
             // decode
             String speedKphStr = mStrBuffer.substring(mStrBuffer.length() - 2, mStrBuffer.length());
