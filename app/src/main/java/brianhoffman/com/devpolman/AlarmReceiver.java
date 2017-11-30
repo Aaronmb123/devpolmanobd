@@ -30,9 +30,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
         // TODO if locked return
-        //getStatus() to get the status of your AsyncTask.
+        // getStatus() to get the status of your AsyncTask.
         // If status is AsyncTask.Status.RUNNING then your task is running.
-
 
         try {
             new obdQueryTask(arg0).execute();
@@ -40,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        //Toast.makeText(arg0, "I'm running", Toast.LENGTH_SHORT).show();
+        Toast.makeText(arg0, "PhoneLocker running", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -71,7 +70,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //Toast.makeText(mContext, "async running", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
             Log.i("+++++++++++++++++++", "async running");
 
             mBluetoothConnected = false;
@@ -81,9 +84,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             try {
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             } catch (Exception e) {
-                //Toast.makeText(mContext, "no bluetooth", Toast.LENGTH_SHORT).show();
-                return;
+                return null;
             }
+
             //mBluetoothAdapter.enable();
             mPairedDevices = mBluetoothAdapter.getBondedDevices();
 
@@ -99,27 +102,17 @@ public class AlarmReceiver extends BroadcastReceiver {
                 // client device must have UUID of server device (server device UUID is random)
                 mSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
             } catch (IOException e) {
-                //Toast.makeText(mContext, "no comm", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "no comm");
-                return;
+                return null;
             }
 
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
             Log.i("+++++++++++++++++++", "do in background");
 
             try {
                 mSocket.connect();
             } catch (IOException e) {
-//            Writer writer = new StringWriter();
-//            e.printStackTrace(new PrintWriter(writer));
-//            String s = writer.toString();
-//            for (int i = 0; i < 5; i++)
-//                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-//                Toast.makeText(mContext, "no connect", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "no connect");
+                Log.i("+++++++++++++++++++", e.toString());
                 return null;
             }
 
@@ -128,12 +121,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             try {
                 mInputStream = mSocket.getInputStream();
             } catch (IOException e) {
-//            Writer writer = new StringWriter();
-//            e.printStackTrace(new PrintWriter(writer));
-//            String s = writer.toString();
-//            for (int i = 0; i < 5; i++)
-//                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-//                Toast.makeText(mContext, "no input stream", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "no input stream");
                 return null;
             }
@@ -143,12 +130,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             try {
                 mOutputStream = mSocket.getOutputStream();
             } catch (IOException e) {
-//            Writer writer = new StringWriter();
-//            e.printStackTrace(new PrintWriter(writer));
-//            String s = writer.toString();
-//            for (int i = 0; i < 5; i++)
-//                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-//                Toast.makeText(mContext, "no output stream", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "no output stream");
                 return null;
             }
@@ -161,12 +142,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             try {
                 mOutputStream.write(("AT Z\r").getBytes());
             } catch (IOException e) {
-//            Writer writer = new StringWriter();
-//            e.printStackTrace(new PrintWriter(writer));
-//            String s = writer.toString();
-//            for (int i = 0; i < 5; i++)
-//                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-//                Toast.makeText(mContext, "no write reset to output", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "no write reset to output");
                 return null;
             }
@@ -176,12 +151,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             try {
                 mOutputStream.flush();
             } catch (IOException e) {
-//            Writer writer = new StringWriter();
-//            e.printStackTrace(new PrintWriter(writer));
-//            String s = writer.toString();
-//            for (int i = 0; i < 5; i++)
-//                Toast.makeText(arg0, s, Toast.LENGTH_LONG).show();
-//                Toast.makeText(mContext, "No flush", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "No flush");
             }
 
@@ -259,29 +228,28 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Log.i("+++++++++++++++++++", mSetProcBuffer.toString());
 
             }
-//        // send speed command
-//        try {
-//            mOutputStream.write(("01 0D\r").getBytes());
-//        } catch (IOException e) {
-//            Toast.makeText(arg0, "no write speed cmd to output", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
 
-            // send rpm command
+            // send speed command
             try {
-                mOutputStream.write(("01 0C\r").getBytes());
+                mOutputStream.write(("01 0D\r").getBytes());
             } catch (IOException e) {
-//                Toast.makeText(mContext, "no write rpm cmd to output", Toast.LENGTH_SHORT).show();
-                Log.i("+++++++++++++++++++", "no write rpm cmd to output");
+                Log.i("+++++++++++++++++++", "no write speed cmd to output");
                 return null;
             }
+            Log.i("+++++++++++++++++++", "send speed");
 
-            Log.i("+++++++++++++++++++", "send rpm");
+            // send rpm command
+//            try {
+//                mOutputStream.write(("01 0C\r").getBytes());
+//            } catch (IOException e) {
+//                Log.i("+++++++++++++++++++", "no write rpm cmd to output");
+//                return null;
+//            }
+//            Log.i("+++++++++++++++++++", "send rpm");
 
             try {
                 mOutputStream.flush();
             } catch (IOException ieo) {
-//                Toast.makeText(mContext, "No flush", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "No flush");
             }
 
@@ -292,7 +260,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
-//                Toast.makeText(mContext, "thread sleep error", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "thread sleep error");
                 return null;
             }
@@ -304,7 +271,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                     b = (byte) mInputStream.read();
                     Log.i("+++++++++++++++++++", "read rpm byte");
                 } catch (IOException e) {
-//                    Toast.makeText(mContext, "input read error", Toast.LENGTH_SHORT).show();
                     Log.i("+++++++++++++++++++", "input read error");
                     return null;
                 }

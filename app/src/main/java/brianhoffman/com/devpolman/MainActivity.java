@@ -107,21 +107,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        unregisterReceiver(serviceReceiver);
-//        super.onDestroy();
-//    }
-
-//    public class ServiceToActivity extends BroadcastReceiver
-//    {
-//        @Override
-//        public void onReceive(Context context, Intent intent)
-//        {
-//            Bundle notificationData = intent.getExtras();
-//            String stacktrace = notificationData.getString("ServiceToActivityKey");
-//            mStackTraceTV.setText(stacktrace);
-//        }
-//    }
-
 }
