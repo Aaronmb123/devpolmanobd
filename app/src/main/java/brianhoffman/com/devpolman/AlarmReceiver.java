@@ -253,7 +253,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Log.i("+++++++++++++++++++", "No flush");
             }
 
-            Log.i("+++++++++++++++++++", "flush rpm");
+            Log.i("+++++++++++++++++++", "flush speed/rpm");
 
             // read buffer
 
@@ -264,12 +264,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 return null;
             }
 
-            Log.i("+++++++++++++++++++", "rpm thread slept");
+            Log.i("+++++++++++++++++++", "rpm speed/thread slept");
 
             while (true) {
                 try {
                     b = (byte) mInputStream.read();
-                    Log.i("+++++++++++++++++++", "read rpm byte");
+                    Log.i("+++++++++++++++++++", "read speed/rpm byte");
                 } catch (IOException e) {
                     Log.i("+++++++++++++++++++", "input read error");
                     return null;
@@ -277,7 +277,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 c = (char) b;
                 if (c == '>') {
-                    Log.i("+++++++++++++++++++", "rpm breaking");
+                    Log.i("+++++++++++++++++++", "speed/rpm breaking");
                     break;
                 }
                 mRpmCmdBuffer.append(c);
@@ -287,12 +287,22 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             String speedOutput = mRpmCmdBuffer.toString();
             Log.i("++++++++++after loop", speedOutput);
+            speedOutput = speedOutput.trim();
+            Log.i("++++++++++after trim", speedOutput);
+//            for(int i = 0; i < speedOutput.length(); i++) {
+//                String str = String.valueOf(speedOutput.charAt(i));
+//                str += " " + Integer.toString(i);
+//                Log.i("++++speedOutputLoop", str);
+//            }
 
             // decode
+            //speedOutput = "safkjdsfhdskjfn dskfjhsdkfj 4D ";
             String speedKphStr = speedOutput.substring(speedOutput.length() - 2, speedOutput.length());
+            Log.i("+++speedKphAfterSub", speedKphStr);
             speedKphStr = "0x" + speedKphStr;
+            Log.i("+++speedKphAfterCat", speedKphStr);
             int speedKph = Integer.decode(speedKphStr);
-            Log.i("++++++++++speedKph", String.valueOf(speedKph));
+            Log.i("speedKphAfterDecode", String.valueOf(speedKph));
 
             if (speedKph > 0)
                 mSpeedOverZero = true;
