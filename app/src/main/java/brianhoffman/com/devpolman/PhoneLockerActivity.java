@@ -7,6 +7,7 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 public class PhoneLockerActivity extends AppCompatActivity {
 
     Button mButtonEnable;
+    private Button mCloseBTN;
     private PendingIntent pendingIntent;
     private AlarmManager manager;
 
@@ -33,6 +35,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
         mButtonEnable = (Button) findViewById(R.id.button_enable);
+        mCloseBTN = (Button) findViewById(R.id.close_btn);
 
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         mComponentName = new ComponentName(PhoneLockerActivity.this, Controller.class);
@@ -59,6 +62,14 @@ public class PhoneLockerActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mCloseBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     public static DevicePolicyManager getDevicePolicyManager() {

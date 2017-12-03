@@ -25,8 +25,12 @@ public class PasscodeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mEnterPasscodeET.getText().toString().equals("123456")) {
+
                     Intent intent = new Intent(getApplicationContext(), PhoneLockerActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    finish();
+
                 } else {
                     mEnterPasscodeET.setText("");
                     Toast.makeText(getApplicationContext(),"Passcode incorrect", Toast.LENGTH_SHORT).show();
