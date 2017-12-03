@@ -27,7 +27,6 @@ public class PasscodeActivity extends AppCompatActivity {
                 if (mEnterPasscodeET.getText().toString().equals("123456")) {
 
                     Intent intent = new Intent(getApplicationContext(), PhoneLockerActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
 
