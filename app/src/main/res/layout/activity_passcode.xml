@@ -19,6 +19,7 @@
 
     <EditText
         android:id="@+id/passcode_et"
+        android:text="123456"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

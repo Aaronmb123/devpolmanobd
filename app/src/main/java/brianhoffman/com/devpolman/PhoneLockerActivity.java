@@ -30,6 +30,11 @@ public class PhoneLockerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_locker);
 
+        // start ObdQueryService
+        Intent intent = ObdQueryService.newIntent(this);
+        getApplicationContext().startService(intent);
+
+
         // Retrieve a PendingIntent that will perform a broadcast
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);

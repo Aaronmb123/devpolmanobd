@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".PasscodeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,7 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".PhoneLockerActivity" />
 
         <receiver
@@ -38,7 +38,6 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_DISABLED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true">
@@ -46,6 +45,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".ObdQueryService" />
 
     </application>
 
