@@ -7,19 +7,14 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Set;
 
 
@@ -303,7 +298,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     Log.i("+++++++++++++++++++", "no close");
                 }
 
-                DevicePolicyManager devman = MainActivity.getDevicePolicyManager();
+                DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
                 Log.i("+++++++++++++++++++", "locking");
                 devman.lockNow();
             }

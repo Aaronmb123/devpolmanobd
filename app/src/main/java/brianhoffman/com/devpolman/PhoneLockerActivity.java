@@ -4,19 +4,16 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class PhoneLockerActivity extends AppCompatActivity {
 
     Button mButtonEnable;
     private PendingIntent pendingIntent;
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mButtonEnable = (Button) findViewById(R.id.button_enable);
 
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-        mComponentName = new ComponentName(MainActivity.this, Controller.class);
+        mComponentName = new ComponentName(PhoneLockerActivity.this, Controller.class);
 
         boolean active = mDevicePolicyManager.isAdminActive(mComponentName);
         if (active) {
