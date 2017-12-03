@@ -87,7 +87,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 return null;
             }
 
-            //mBluetoothAdapter.enable();
+            mBluetoothAdapter.enable();
             mPairedDevices = mBluetoothAdapter.getBondedDevices();
 
             for (BluetoothDevice device : mPairedDevices) {
@@ -99,7 +99,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             // connect to bluetooth
             try {
-                // client device must have UUID of server device (server device UUID is random)
                 mSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
             } catch (IOException e) {
                 Log.i("+++++++++++++++++++", "no comm");
@@ -238,15 +237,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
             Log.i("+++++++++++++++++++", "send speed");
 
-            // send rpm command
-//            try {
-//                mOutputStream.write(("01 0C\r").getBytes());
-//            } catch (IOException e) {
-//                Log.i("+++++++++++++++++++", "no write rpm cmd to output");
-//                return null;
-//            }
-//            Log.i("+++++++++++++++++++", "send rpm");
-
             try {
                 mOutputStream.flush();
             } catch (IOException ieo) {
@@ -256,9 +246,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.i("+++++++++++++++++++", "flush speed/rpm");
 
             // read buffer
-
             try {
-                Thread.sleep(1000);
+                Thread.sleep(600);
             } catch (Exception e) {
                 Log.i("+++++++++++++++++++", "thread sleep error");
                 return null;
@@ -289,14 +278,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.i("++++++++++after loop", speedOutput);
             speedOutput = speedOutput.trim();
             Log.i("++++++++++after trim", speedOutput);
-//            for(int i = 0; i < speedOutput.length(); i++) {
-//                String str = String.valueOf(speedOutput.charAt(i));
-//                str += " " + Integer.toString(i);
-//                Log.i("++++speedOutputLoop", str);
-//            }
 
             // decode
-            //speedOutput = "safkjdsfhdskjfn dskfjhsdkfj 4D ";
             String speedKphStr = speedOutput.substring(speedOutput.length() - 2, speedOutput.length());
             Log.i("+++speedKphAfterSub", speedKphStr);
             speedKphStr = "0x" + speedKphStr;
@@ -309,10 +292,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             Log.i("+++++++++++++++++++", Boolean.toString(mSpeedOverZero));
 
-            if (mBluetoothConnected && mSpeedOverZero) {
+            if (mSpeedOverZero) {
 
                 // closing socket before locking allows program to reconnect after unlock
                 // TODO save connection state somehow
+                // SharedPreferences
                 try {
                     mSocket.close();
                 } catch (IOException ioe) {
@@ -320,6 +304,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
 
                 DevicePolicyManager devman = MainActivity.getDevicePolicyManager();
+                Log.i("+++++++++++++++++++", "locking");
                 devman.lockNow();
             }
 

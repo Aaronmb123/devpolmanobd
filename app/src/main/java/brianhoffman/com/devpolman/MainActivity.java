@@ -19,7 +19,6 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     Button mButtonEnable;
-    public TextView mStackTraceTV;
     private PendingIntent pendingIntent;
     private AlarmManager manager;
 
@@ -27,19 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private static DevicePolicyManager mDevicePolicyManager;
     ComponentName mComponentName;
 
-//    private ServiceToActivity serviceReceiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        mStackTraceTV = (TextView) findViewById(R.id.stacktrace_text_view);
-
-        // create receiver to get stack trace from alarmReceiver
-//        serviceReceiver = new ServiceToActivity();
-//        IntentFilter intentSFiler = new IntentFilter("ServiceToActivity");
-//        registerReceiver(serviceReceiver, intentSFiler);
 
         // Retrieve a PendingIntent that will perform a broadcast
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
@@ -94,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startAlarm(View view) {
         manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        int interval = 10000;
+        int interval = 1000;
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
         Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
