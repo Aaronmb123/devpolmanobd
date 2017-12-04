@@ -39,7 +39,8 @@ public class ObdQueryTask extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] objects) {
-        Log.i("+++++++++++++++++++", "async running");
+
+        Log.i("+++++++++++++++++++", "do in background");
 
         mSpeedOverZero = false;
 
@@ -67,8 +68,6 @@ public class ObdQueryTask extends AsyncTask {
             Log.i("+++++++++++++++++++", "no comm");
             return null;
         }
-
-        Log.i("+++++++++++++++++++", "do in background");
 
         try {
             mSocket.connect();
@@ -235,6 +234,15 @@ public class ObdQueryTask extends AsyncTask {
 
         }
 
+        // closing socket before locking allows program to reconnect after unlock
+        // TODO save connection state somehow
+        // SharedPreferences
+        try {
+            mSocket.close();
+        } catch (IOException ioe) {
+            Log.i("+++++++++++++++++++", "no close");
+        }
+
         String speedOutput = mRpmCmdBuffer.toString();
         Log.i("++++++++++after loop", speedOutput);
         speedOutput = speedOutput.trim();
@@ -254,15 +262,6 @@ public class ObdQueryTask extends AsyncTask {
         Log.i("+++++++++++++++++++", Boolean.toString(mSpeedOverZero));
 
         if (mSpeedOverZero) {
-
-            // closing socket before locking allows program to reconnect after unlock
-            // TODO save connection state somehow
-            // SharedPreferences
-            try {
-                mSocket.close();
-            } catch (IOException ioe) {
-                Log.i("+++++++++++++++++++", "no close");
-            }
 
             DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
             Log.i("+++++++++++++++++++", "locking");
