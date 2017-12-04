@@ -21,6 +21,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
 
     private static final String TAG = "PhoneLockerActivity";
 
+    //TODO rename mbuttonenable;
     private Button mButtonEnable;
     private Button mDriveSafeBtn;
     private Button mCloseBTN;
@@ -61,12 +62,8 @@ public class PhoneLockerActivity extends AppCompatActivity {
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         mComponentName = new ComponentName(PhoneLockerActivity.this, Controller.class);
 
-        boolean active = mDevicePolicyManager.isAdminActive(mComponentName);
-        if (active) {
-            onToggleDevicePolicyManager(!active, getApplicationContext());
-        } else {
-            onToggleDevicePolicyManager(active, getApplicationContext());
-        }
+        boolean active = !(QueryPreferences.isDevicePolicyManagerOn(getApplicationContext()));
+        onToggleDevicePolicyManager(active, getApplicationContext());
 
         mButtonEnable.setOnClickListener(new View.OnClickListener() {
             @Override
