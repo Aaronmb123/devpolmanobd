@@ -8,6 +8,7 @@ public class QueryPreferences {
 
     private static final String PREF_IS_ALARM_ON = "isAlarmOn";
     private static final String PREF_IS_DEVICE_POLICY_MANAGER_ON = "isDevPolManOn";
+    private static final String HASHED_PASSCODE = "hashedPasscode";
 
     public static boolean isAlarmOn(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_ALARM_ON, false);
