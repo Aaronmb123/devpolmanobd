@@ -24,7 +24,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        Toast.makeText(context, "PhoneLocker running", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "OBD Query running", Toast.LENGTH_SHORT).show();
 
     }
 }
