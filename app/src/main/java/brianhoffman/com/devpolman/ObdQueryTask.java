@@ -30,7 +30,6 @@ public class ObdQueryTask extends AsyncTask {
     private StringBuilder mSetProcBuffer = new StringBuilder();
     private StringBuilder mRpmCmdBuffer = new StringBuilder();
 
-    private boolean mBluetoothConnected;
     private boolean mSpeedOverZero;
 
     public ObdQueryTask(Context context) {
@@ -42,7 +41,6 @@ public class ObdQueryTask extends AsyncTask {
 
         Log.i("+++++++++++++++++++", "async running");
 
-        mBluetoothConnected = false;
         mSpeedOverZero = false;
 
         // get obd
@@ -99,8 +97,6 @@ public class ObdQueryTask extends AsyncTask {
         }
 
         Log.i("+++++++++++++++++++", "got output stream");
-
-        mBluetoothConnected = true;
 
         // reset obd
         try {
