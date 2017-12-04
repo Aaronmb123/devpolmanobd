@@ -32,12 +32,29 @@
         android:onClick="cancelAlarm"
         android:text="Cancel Alarm"
         app:layout_constraintTop_toBottomOf="@+id/button1"/>
+
+    <Button
+        android:id="@+id/start_obd_service_btn"
+        android:text="Start DriveSafe Service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/button2"/>
+
+    <Button
+        android:id="@+id/stop_obd_service_btn"
+        android:text="Stop DriveSafe Service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/start_obd_service_btn"/>
+
     <Button
         android:id="@+id/close_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Close App"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/button2"/>
+        app:layout_constraintTop_toBottomOf="@id/stop_obd_service_btn"/>
 
 </android.support.constraint.ConstraintLayout>

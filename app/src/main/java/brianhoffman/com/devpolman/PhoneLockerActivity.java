@@ -17,6 +17,8 @@ import android.widget.Toast;
 public class PhoneLockerActivity extends AppCompatActivity {
 
     Button mButtonEnable;
+    private Button mStartDriveSafeBtn;
+    private Button mStopDriveSafeBtn;
     private Button mCloseBTN;
     private PendingIntent pendingIntent;
     private AlarmManager manager;
