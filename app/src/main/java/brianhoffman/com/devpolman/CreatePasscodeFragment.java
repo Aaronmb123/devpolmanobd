@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 public class CreatePasscodeFragment extends Fragment {
 
+    private static final String HASHED_PASSCODE = "passcode";
+
     private EditText mEnterPasscodeET;
     private EditText mReEnterPasscodeET;
     private Button mDoneBTN;
@@ -35,6 +37,7 @@ public class CreatePasscodeFragment extends Fragment {
                 String reEnterPassode = mReEnterPasscodeET.getText().toString();
                 if (enterPasscode.equals(reEnterPassode)) {
                     // hash and save to shared preferences
+                    QueryPreferences.setPasscode(getContext(), enterPasscode);
                     Intent intent = new Intent(getActivity(), PhoneLockerActivity.class);
                     startActivity(intent);
                     getActivity().finish();
