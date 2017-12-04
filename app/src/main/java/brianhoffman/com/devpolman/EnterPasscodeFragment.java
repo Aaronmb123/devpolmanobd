@@ -22,13 +22,8 @@ public class EnterPasscodeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
-    @Override
-    protected void onCreateView(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_enter_passcode);
+        View view = inflater.inflate(R.layout.fragment_enter_passcode, container, false);
 
         mEnterPasscodeET = (EditText) view.findViewById(R.id.passcode_et);
         mPasscodeBTN = (Button) view.findViewById(R.id.passcode_btn);
@@ -43,11 +38,13 @@ public class EnterPasscodeFragment extends Fragment {
 
                 } else {
                     mEnterPasscodeET.setText("");
-                    Toast.makeText(getApplicationContext(),"Passcode incorrect", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Passcode incorrect", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        return view;
     }
+
 
 }
