@@ -1,7 +1,9 @@
 package brianhoffman.com.devpolman;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class EnterPasscodeFragment extends Fragment {
+
+    private static final String HASHED_PASSCODE = "hashedPasscode";
 
     private EditText mEnterPasscodeET;
     private Button mPasscodeBTN;
@@ -30,7 +34,8 @@ public class EnterPasscodeFragment extends Fragment {
         mPasscodeBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEnterPasscodeET.getText().toString().equals("123456")) {
+                String passcode = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(HASHED_PASSCODE, null);
+                if (mEnterPasscodeET.getText().toString().equals(passcode)) {
 
                     Intent intent = new Intent(getActivity(), PhoneLockerActivity.class);
                     startActivity(intent);
