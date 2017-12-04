@@ -22,8 +22,8 @@ public class PhoneLockerActivity extends AppCompatActivity {
     private static final String TAG = "PhoneLockerActivity";
 
     //TODO rename mbuttonenable;
-    private Button mButtonEnable;
-    private Button mDriveSafeBtn;
+    private Button mDevicePolicyManagerBTN;
+    private Button mDriveSafeBTN;
     private Button mCloseBTN;
 
     private static final int RESULT_ENABLE = 1;
@@ -35,28 +35,28 @@ public class PhoneLockerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_locker);
 
-        mDriveSafeBtn = (Button) findViewById(R.id.start_obd_service_btn);
+        mDriveSafeBTN = (Button) findViewById(R.id.start_obd_service_btn);
         if (ObdQueryService.isServiceAlarmOn(getApplicationContext())) {
-            mDriveSafeBtn.setText("Stop DriveSafe Service");
+            mDriveSafeBTN.setText("Stop DriveSafe Service");
         } else {
-            mDriveSafeBtn.setText("Start DriveSafe Service");
+            mDriveSafeBTN.setText("Start DriveSafe Service");
         }
-        mDriveSafeBtn.setOnClickListener(new View.OnClickListener() {
+        mDriveSafeBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!ObdQueryService.isServiceAlarmOn(getApplicationContext())) {
                     ObdQueryService.setServiceAlarm(getApplicationContext(), true);
-                    mDriveSafeBtn.setText("Stop DriveSafe Service");
+                    mDriveSafeBTN.setText("Stop DriveSafe Service");
                     Log.i(TAG, "ObdQueryService Started");
                 } else {
                     ObdQueryService.setServiceAlarm(getApplicationContext(), false);
-                    mDriveSafeBtn.setText("Start DriveSafe Service");
+                    mDriveSafeBTN.setText("Start DriveSafe Service");
                     Log.i(TAG, "ObdQueryService Stopped");
                 }
             }
         });
 
-        mButtonEnable = (Button) findViewById(R.id.button_enable);
+        mDevicePolicyManagerBTN = (Button) findViewById(R.id.button_enable);
         mCloseBTN = (Button) findViewById(R.id.close_btn);
 
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
@@ -65,7 +65,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
         boolean active = !(QueryPreferences.isDevicePolicyManagerOn(getApplicationContext()));
         onToggleDevicePolicyManager(active, getApplicationContext());
 
-        mButtonEnable.setOnClickListener(new View.OnClickListener() {
+        mDevicePolicyManagerBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean active = mDevicePolicyManager.isAdminActive(mComponentName);
@@ -92,14 +92,14 @@ public class PhoneLockerActivity extends AppCompatActivity {
 
     private void onToggleDevicePolicyManager(boolean isActive, Context context) {
         if (isActive) {
-            mButtonEnable.setText("Disable Locking Capability");
-            mDriveSafeBtn.setClickable(true);
-            mDriveSafeBtn.setTextColor(Color.parseColor("#000000"));
+            mDevicePolicyManagerBTN.setText("Disable Locking Capability");
+            mDriveSafeBTN.setClickable(true);
+            mDriveSafeBTN.setTextColor(Color.parseColor("#000000"));
             QueryPreferences.setDevicePolicyManagerOn(context, false);
         } else {
-            mButtonEnable.setText("Enable Locking Capability");
-            mDriveSafeBtn.setClickable(false);
-            mDriveSafeBtn.setTextColor(Color.parseColor("#708090"));
+            mDevicePolicyManagerBTN.setText("Enable Locking Capability");
+            mDriveSafeBTN.setClickable(false);
+            mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
             QueryPreferences.setDevicePolicyManagerOn(context, true);
         }
     }
