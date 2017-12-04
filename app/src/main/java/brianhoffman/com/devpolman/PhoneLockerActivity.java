@@ -2,11 +2,13 @@ package brianhoffman.com.devpolman;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,12 +24,10 @@ public class PhoneLockerActivity extends AppCompatActivity {
     private Button mButtonEnable;
     private Button mDriveSafeBtn;
     private Button mCloseBTN;
-    private PendingIntent pendingIntent;
-    private AlarmManager manager;
 
-    static final int RESULT_ENABLE = 1;
+    private static final int RESULT_ENABLE = 1;
     private static DevicePolicyManager mDevicePolicyManager;
-    ComponentName mComponentName;
+    private ComponentName mComponentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +55,6 @@ public class PhoneLockerActivity extends AppCompatActivity {
             }
         });
 
-
-
-        // Retrieve a PendingIntent that will perform a broadcast
-//        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-//        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-
         mButtonEnable = (Button) findViewById(R.id.button_enable);
         mCloseBTN = (Button) findViewById(R.id.close_btn);
 
@@ -69,9 +63,9 @@ public class PhoneLockerActivity extends AppCompatActivity {
 
         boolean active = mDevicePolicyManager.isAdminActive(mComponentName);
         if (active) {
-            mButtonEnable.setText("Disable");
+            onToggleDevicePolicyManager(!active, getApplicationContext());
         } else {
-            mButtonEnable.setText("Enable");
+            onToggleDevicePolicyManager(active, getApplicationContext());
         }
 
         mButtonEnable.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +74,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
                 boolean active = mDevicePolicyManager.isAdminActive(mComponentName);
                 if (active) {
                     mDevicePolicyManager.removeActiveAdmin(mComponentName);
-                    mButtonEnable.setText("Enable");
+                    onToggleDevicePolicyManager(!active, getApplicationContext());
                 } else {
                     Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
                     intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
@@ -99,6 +93,20 @@ public class PhoneLockerActivity extends AppCompatActivity {
 
     }
 
+    private void onToggleDevicePolicyManager(boolean isActive, Context context) {
+        if (isActive) {
+            mButtonEnable.setText("Disable Locking Capability");
+            mDriveSafeBtn.setClickable(true);
+            mDriveSafeBtn.setTextColor(Color.parseColor("#000000"));
+            QueryPreferences.setDevicePolicyManagerOn(context, false);
+        } else {
+            mButtonEnable.setText("Enable Locking Capability");
+            mDriveSafeBtn.setClickable(false);
+            mDriveSafeBtn.setTextColor(Color.parseColor("#708090"));
+            QueryPreferences.setDevicePolicyManagerOn(context, true);
+        }
+    }
+
     public static DevicePolicyManager getDevicePolicyManager() {
         return mDevicePolicyManager;
     }
@@ -108,7 +116,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
         switch (requestCode) {
             case RESULT_ENABLE:
                 if (resultCode == Activity.RESULT_OK) {
-                    mButtonEnable.setText("Disable");
+                    onToggleDevicePolicyManager(true, getApplicationContext());
                 } else {
                     Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
                 }
@@ -117,19 +125,6 @@ public class PhoneLockerActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-//    public void startAlarm(View view) {
-//        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-//        int interval = 1000;
-//
-//        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-//        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
-//    }
-//
-//    public void cancelAlarm(View view) {
-//        if (manager != null) {
-//            manager.cancel(pendingIntent);
-//            Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
-//        }
-//    }
+
 
 }

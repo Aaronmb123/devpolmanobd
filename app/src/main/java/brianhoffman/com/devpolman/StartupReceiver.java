@@ -13,8 +13,8 @@ public class StartupReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "Received broadcast intent: " + intent.getAction());
 
-        //boolean isOn = QueryPreferences.isAlarmOn(context);
-        //PollService.setServiceAlarm(context, isOn);
+        boolean isOn = QueryPreferences.isAlarmOn(context);
+        ObdQueryService.setServiceAlarm(context, isOn);
     }
 
 }

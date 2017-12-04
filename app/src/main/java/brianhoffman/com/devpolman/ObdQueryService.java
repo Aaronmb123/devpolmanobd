@@ -35,6 +35,8 @@ public class ObdQueryService extends IntentService {
             pendingIntent.cancel();
         }
 
+        QueryPreferences.setAlarmOn(context, isOn);
+
     }
 
     public static boolean isServiceAlarmOn(Context context) {
