@@ -51,8 +51,8 @@ public class PhoneLockerActivity extends AppCompatActivity {
 
 
         // Retrieve a PendingIntent that will perform a broadcast
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+//        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+//        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
         mButtonEnable = (Button) findViewById(R.id.button_enable);
         mCloseBTN = (Button) findViewById(R.id.close_btn);
@@ -110,19 +110,19 @@ public class PhoneLockerActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void startAlarm(View view) {
-        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        int interval = 1000;
-
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
-    }
-
-    public void cancelAlarm(View view) {
-        if (manager != null) {
-            manager.cancel(pendingIntent);
-            Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    public void startAlarm(View view) {
+//        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//        int interval = 1000;
+//
+//        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+//        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+//    }
+//
+//    public void cancelAlarm(View view) {
+//        if (manager != null) {
+//            manager.cancel(pendingIntent);
+//            Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
 }

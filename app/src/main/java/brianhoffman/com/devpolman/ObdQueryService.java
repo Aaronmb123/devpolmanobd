@@ -14,7 +14,7 @@ import android.widget.Toast;
 public class ObdQueryService extends IntentService {
 
     private static final String TAG = "ObdQueryService";
-    private static final long POLL_INTERVAL_MILLISECONDS = 10000;
+    private static final long POLL_INTERVAL_MILLISECONDS = 1000;
 
     public static Intent newIntent(Context context) {
         return new Intent(context, ObdQueryService.class);
@@ -31,6 +31,12 @@ public class ObdQueryService extends IntentService {
 
     }
 
+    public static boolean isServiceAlarmOn(Context context) {
+        Intent intent = ObdQueryService.newIntent(context);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE);
+        return pendingIntent != null;
+    }
+
     public ObdQueryService() {
         super(TAG);
     }
@@ -40,6 +46,7 @@ public class ObdQueryService extends IntentService {
         Log.i(TAG, "Received an intent: " + intent);
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         if (mBluetoothAdapter == null) {
             Toast.makeText(getApplicationContext(), "Device doesn't support Bluetooth", Toast.LENGTH_SHORT).show();
         } else {
@@ -56,6 +63,8 @@ public class ObdQueryService extends IntentService {
             Log.i(TAG, "OBD Query Error");
             return;
         }
+
+        Log.i(TAG, "Sent OBD query");
 
     }
 
