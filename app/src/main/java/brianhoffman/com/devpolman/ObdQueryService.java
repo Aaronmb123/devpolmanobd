@@ -1,10 +1,13 @@
 package brianhoffman.com.devpolman;
 
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +18,17 @@ public class ObdQueryService extends IntentService {
 
     public static Intent newIntent(Context context) {
         return new Intent(context, ObdQueryService.class);
+    }
+
+    public static void setServiceAlarm(Context context) {
+
+        Intent intent = ObdQueryService.newIntent(context);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),
+                POLL_INTERVAL_MILLISECONDS, pendingIntent);
+
     }
 
     public ObdQueryService() {

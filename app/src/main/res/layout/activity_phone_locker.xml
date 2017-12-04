@@ -7,13 +7,25 @@
                 android:layout_height="match_parent"
                 tools:context=".PhoneLockerActivity" >
 
+    <TextView
+        android:id="@+id/enable_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Enable phone to be locked via this app: (must be enabled for app to work properly)"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
     <Button
         android:id="@+id/button_enable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Lock Enable"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:text="Enable"
+        app:layout_constraintTop_toTopOf="@id/enable_tv"/>
 
     <Button
         android:id="@+id/button1"
