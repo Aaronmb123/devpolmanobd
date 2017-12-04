@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +39,6 @@ public class ObdQueryTask extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] objects) {
-
         Log.i("+++++++++++++++++++", "async running");
 
         mSpeedOverZero = false;

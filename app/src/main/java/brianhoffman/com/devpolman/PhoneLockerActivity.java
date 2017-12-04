@@ -47,16 +47,20 @@ public class PhoneLockerActivity extends AppCompatActivity {
                 if (!ObdQueryService.isServiceAlarmOn(getApplicationContext())) {
                     ObdQueryService.setServiceAlarm(getApplicationContext(), true);
                     mDriveSafeBTN.setText("Stop DriveSafe Service");
+                    mDevicePolicyManagerBTN.setClickable(false);
+                    mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));
                     Log.i(TAG, "ObdQueryService Started");
                 } else {
                     ObdQueryService.setServiceAlarm(getApplicationContext(), false);
                     mDriveSafeBTN.setText("Start DriveSafe Service");
+                    mDevicePolicyManagerBTN.setClickable(true);
+                    mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#000000"));
                     Log.i(TAG, "ObdQueryService Stopped");
                 }
             }
         });
 
-        mDevicePolicyManagerBTN = (Button) findViewById(R.id.button_enable);
+        mDevicePolicyManagerBTN = (Button) findViewById(R.id.device_policy_manager_btn);
         mCloseBTN = (Button) findViewById(R.id.close_btn);
 
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
