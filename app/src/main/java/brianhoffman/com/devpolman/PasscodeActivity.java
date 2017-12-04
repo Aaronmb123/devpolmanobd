@@ -14,6 +14,8 @@ public class PasscodeActivity extends AppCompatActivity {
     private EditText mEnterPasscodeET;
     private Button mPasscodeBTN;
 
+    //use SharePreferences to store hashed password
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

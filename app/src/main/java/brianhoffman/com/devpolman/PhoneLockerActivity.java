@@ -20,8 +20,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
     private static final String TAG = "PhoneLockerActivity";
 
     private Button mButtonEnable;
-    private Button mStartDriveSafeBtn;
-    private Button mStopDriveSafeBtn;
+    private Button mDriveSafeBtn;
     private Button mCloseBTN;
     private PendingIntent pendingIntent;
     private AlarmManager manager;
@@ -35,16 +34,24 @@ public class PhoneLockerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_locker);
 
-        mStartDriveSafeBtn = (Button) findViewById(R.id.start_obd_service_btn);
-        mStartDriveSafeBtn.setOnClickListener(new View.OnClickListener() {
+        mDriveSafeBtn = (Button) findViewById(R.id.start_obd_service_btn);
+        if (ObdQueryService.isServiceAlarmOn(getApplicationContext())) {
+            mDriveSafeBtn.setText("Stop DriveSafe Service");
+        } else {
+            mDriveSafeBtn.setText("Start DriveSafe Service");
+        }
+        mDriveSafeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // start ObdQueryService
-//                Intent intent = ObdQueryService.newIntent(getApplicationContext());
-//                getApplicationContext().startService(intent);
-                ObdQueryService.setServiceAlarm(getApplicationContext());
-                Log.i(TAG, "ObdQueryService Started");
-
+                if (!ObdQueryService.isServiceAlarmOn(getApplicationContext())) {
+                    ObdQueryService.setServiceAlarm(getApplicationContext(), true);
+                    mDriveSafeBtn.setText("Stop DriveSafe Service");
+                    Log.i(TAG, "ObdQueryService Started");
+                } else {
+                    ObdQueryService.setServiceAlarm(getApplicationContext(), false);
+                    mDriveSafeBtn.setText("Start DriveSafe Service");
+                    Log.i(TAG, "ObdQueryService Stopped");
+                }
             }
         });
 

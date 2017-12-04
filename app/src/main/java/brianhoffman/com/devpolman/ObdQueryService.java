@@ -20,14 +20,20 @@ public class ObdQueryService extends IntentService {
         return new Intent(context, ObdQueryService.class);
     }
 
-    public static void setServiceAlarm(Context context) {
+    public static void setServiceAlarm(Context context, Boolean isOn) {
 
         Intent intent = ObdQueryService.newIntent(context);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),
-                POLL_INTERVAL_MILLISECONDS, pendingIntent);
+
+        if (isOn) {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),
+                    POLL_INTERVAL_MILLISECONDS, pendingIntent);
+        } else {
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+        }
 
     }
 
