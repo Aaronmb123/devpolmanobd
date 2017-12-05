@@ -14,7 +14,7 @@ import android.widget.Toast;
 public class ObdQueryService extends IntentService {
 
     private static final String TAG = "ObdQueryService";
-    private static final long POLL_INTERVAL_MILLISECONDS = 3000;
+    private static final long POLL_INTERVAL_MILLISECONDS = 500;
 
     public static Intent newIntent(Context context) {
         return new Intent(context, ObdQueryService.class);
