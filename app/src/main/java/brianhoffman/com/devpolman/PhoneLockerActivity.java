@@ -152,5 +152,4 @@ public class PhoneLockerActivity extends AppCompatActivity {
     }
 
 
-
 }

@@ -40,11 +40,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".AlarmReceiver"
-            android:enabled="true">
-        </receiver>
-
         <receiver android:name=".StartupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
