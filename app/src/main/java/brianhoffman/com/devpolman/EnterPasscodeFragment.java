@@ -51,5 +51,4 @@ public class EnterPasscodeFragment extends Fragment {
         return view;
     }
 
-
 }

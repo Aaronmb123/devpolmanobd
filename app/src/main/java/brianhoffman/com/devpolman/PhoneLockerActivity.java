@@ -56,7 +56,6 @@ public class PhoneLockerActivity extends AppCompatActivity {
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         mComponentName = new ComponentName(PhoneLockerActivity.this, Controller.class);
 
-        boolean active = !(QueryPreferences.isDevicePolicyManagerOn(getApplicationContext()));
         if (QueryPreferences.isDevicePolicyManagerOn(getApplicationContext())) {
             mDevicePolicyManagerBTN.setText("Disable Locking Capability");
             mDriveSafeBTN.setClickable(true);
@@ -66,6 +65,15 @@ public class PhoneLockerActivity extends AppCompatActivity {
             mDriveSafeBTN.setClickable(false);
             mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
         }
+
+        if (QueryPreferences.isAlarmOn(getApplicationContext())) {
+            mDevicePolicyManagerBTN.setClickable(false);
+            mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));
+        } else {
+            mDevicePolicyManagerBTN.setClickable(true);
+            mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#000000"));
+        }
+
 
         mDevicePolicyManagerBTN.setOnClickListener(new View.OnClickListener() {
             @Override
