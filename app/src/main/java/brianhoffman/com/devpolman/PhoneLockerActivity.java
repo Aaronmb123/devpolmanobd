@@ -56,8 +56,16 @@ public class PhoneLockerActivity extends AppCompatActivity {
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         mComponentName = new ComponentName(PhoneLockerActivity.this, Controller.class);
 
-        boolean active = (QueryPreferences.isDevicePolicyManagerOn(mContext));
-        onToggleDevicePolicyManager(active, mContext);
+        boolean active = !(QueryPreferences.isDevicePolicyManagerOn(getApplicationContext()));
+        if (QueryPreferences.isDevicePolicyManagerOn(getApplicationContext())) {
+            mDevicePolicyManagerBTN.setText("Disable Locking Capability");
+            mDriveSafeBTN.setClickable(true);
+            mDriveSafeBTN.setTextColor(Color.parseColor("#000000"));
+        } else {
+            mDevicePolicyManagerBTN.setText("Enable Locking Capability");
+            mDriveSafeBTN.setClickable(false);
+            mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
+        }
 
         mDevicePolicyManagerBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +87,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                return;
             }
         });
 
@@ -89,12 +98,12 @@ public class PhoneLockerActivity extends AppCompatActivity {
             mDevicePolicyManagerBTN.setText("Disable Locking Capability");
             mDriveSafeBTN.setClickable(true);
             mDriveSafeBTN.setTextColor(Color.parseColor("#000000"));
-            QueryPreferences.setDevicePolicyManagerOn(context, false);
+            QueryPreferences.setDevicePolicyManagerOn(context, true);
         } else {
             mDevicePolicyManagerBTN.setText("Enable Locking Capability");
             mDriveSafeBTN.setClickable(false);
             mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
-            QueryPreferences.setDevicePolicyManagerOn(context, true);
+            QueryPreferences.setDevicePolicyManagerOn(context, false);
         }
     }
 
