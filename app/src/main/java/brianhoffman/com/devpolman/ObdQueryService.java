@@ -14,7 +14,7 @@ import android.widget.Toast;
 public class ObdQueryService extends IntentService {
 
     private static final String TAG = "ObdQueryService";
-    private static final long POLL_INTERVAL_MILLISECONDS = 500;
+    private static final long POLL_INTERVAL_MILLISECONDS = 100;
 
     public static Intent newIntent(Context context) {
         return new Intent(context, ObdQueryService.class);
@@ -66,6 +66,9 @@ public class ObdQueryService extends IntentService {
         }
 
         try {
+            //get instance
+            ObdQueryTask task =
+            //if not null, execute
             new ObdQueryTask(getApplicationContext()).execute();
         } catch (Exception e) {
             Log.i(TAG, "OBD Query Error");

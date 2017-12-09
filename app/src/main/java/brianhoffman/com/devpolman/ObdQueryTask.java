@@ -77,8 +77,6 @@ public class ObdQueryTask extends AsyncTask {
             return null;
         }
 
-        Log.i("+++++++++++++++++++", "connected");
-
         try {
             mInputStream = mSocket.getInputStream();
         } catch (IOException e) {
@@ -86,16 +84,12 @@ public class ObdQueryTask extends AsyncTask {
             return null;
         }
 
-        Log.i("+++++++++++++++++++", "got input stream");
-
         try {
             mOutputStream = mSocket.getOutputStream();
         } catch (IOException e) {
             Log.i("+++++++++++++++++++", "no output stream");
             return null;
         }
-
-        Log.i("+++++++++++++++++++", "got output stream");
 
         // reset obd
         try {
@@ -105,19 +99,13 @@ public class ObdQueryTask extends AsyncTask {
             return null;
         }
 
-        Log.i("+++++++++++++++++++", "wrote to output");
-
         try {
             mOutputStream.flush();
         } catch (IOException e) {
             Log.i("+++++++++++++++++++", "No flush");
         }
 
-        Log.i("+++++++++++++++++++", "flush reset obd");
-
         try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        Log.i("+++++++++++++++++++", "thread slept for obd reset");
 
         byte b;
         char c;
@@ -125,22 +113,17 @@ public class ObdQueryTask extends AsyncTask {
         while (true) {
             try {
                 b = (byte) mInputStream.read();
-                Log.i("+++++++++++++++++++", "read reset byte");
             } catch (IOException e) {
-//                    Toast.makeText(mContext, "input read error", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "input read error");
                 return null;
             }
 
             c = (char) b;
-            Log.i("+++++++++++++++++++", String.valueOf(c));
 
             if (c == '>') {
-                Log.i("+++++++++++++++++++", "reset breaking");
                 break;
             }
             mStrBuffer.append(c);
-            Log.i("+++++++++++++++++++", mResetCmdBuffer.toString());
 
         }
 
@@ -148,43 +131,34 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mOutputStream.write(("AT SP 0\r").getBytes());
         } catch (IOException ieo) {
-//                Toast.makeText(mContext, "no write set to output", Toast.LENGTH_SHORT).show();
             Log.i("+++++++++++++++++++", "no write set to output");
             return null;
         }
 
-        Log.i("+++++++++++++++++++", "sent set protocol");
 
         try {
             mOutputStream.flush();
         } catch (IOException ieo) {
-//                Toast.makeText(mContext, "No flush", Toast.LENGTH_SHORT).show();
             Log.i("+++++++++++++++++++", "No flush");
         }
 
-        Log.i("+++++++++++++++++++", "flush set protocol");
 
         try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
 
-        Log.i("+++++++++++++++++++", "thread slept for obd set proc");
 
         while (true) {
             try {
                 b = (byte) mInputStream.read();
-                Log.i("+++++++++++++++++++", "read set proc byte");
             } catch (IOException e) {
-//                    Toast.makeText(mContext, "input read error", Toast.LENGTH_SHORT).show();
                 Log.i("+++++++++++++++++++", "input read error");
                 return null;
             }
 
             c = (char) b;
             if (c == '>') {
-                Log.i("+++++++++++++++++++", "set proc breaking");
                 break;
             }
             mSetProcBuffer.append(c);
-            Log.i("+++++++++++++++++++", mSetProcBuffer.toString());
 
         }
 
@@ -195,7 +169,6 @@ public class ObdQueryTask extends AsyncTask {
             Log.i("+++++++++++++++++++", "no write speed cmd to output");
             return null;
         }
-        Log.i("+++++++++++++++++++", "send speed");
 
         try {
             mOutputStream.flush();
@@ -203,7 +176,6 @@ public class ObdQueryTask extends AsyncTask {
             Log.i("+++++++++++++++++++", "No flush");
         }
 
-        Log.i("+++++++++++++++++++", "flush speed/rpm");
 
         // read buffer
         try {
@@ -213,12 +185,10 @@ public class ObdQueryTask extends AsyncTask {
             return null;
         }
 
-        Log.i("+++++++++++++++++++", "rpm speed/thread slept");
 
         while (true) {
             try {
                 b = (byte) mInputStream.read();
-                Log.i("+++++++++++++++++++", "read speed/rpm byte");
             } catch (IOException e) {
                 Log.i("+++++++++++++++++++", "input read error");
                 return null;
@@ -226,11 +196,9 @@ public class ObdQueryTask extends AsyncTask {
 
             c = (char) b;
             if (c == '>') {
-                Log.i("+++++++++++++++++++", "speed/rpm breaking");
                 break;
             }
             mRpmCmdBuffer.append(c);
-            Log.i("+++++++++++++++++++", mRpmCmdBuffer.toString());
 
         }
 
@@ -244,27 +212,20 @@ public class ObdQueryTask extends AsyncTask {
         }
 
         String speedOutput = mRpmCmdBuffer.toString();
-        Log.i("++++++++++after loop", speedOutput);
         speedOutput = speedOutput.trim();
-        Log.i("++++++++++after trim", speedOutput);
 
         // decode
         String speedKphStr = speedOutput.substring(speedOutput.length() - 2, speedOutput.length());
-        Log.i("+++speedKphAfterSub", speedKphStr);
         speedKphStr = "0x" + speedKphStr;
-        Log.i("+++speedKphAfterCat", speedKphStr);
         int speedKph = Integer.decode(speedKphStr);
-        Log.i("speedKphAfterDecode", String.valueOf(speedKph));
 
         if (speedKph > 0)
             mSpeedOverZero = true;
 
-        Log.i("+++++++++++++++++++", Boolean.toString(mSpeedOverZero));
 
         if (mSpeedOverZero) {
 
             DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
-            Log.i("+++++++++++++++++++", "locking");
             devman.lockNow();
         }
 
