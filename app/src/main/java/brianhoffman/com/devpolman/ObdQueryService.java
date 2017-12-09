@@ -51,7 +51,6 @@ public class ObdQueryService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i(TAG, "Received an intent: " + intent);
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -65,19 +64,19 @@ public class ObdQueryService extends IntentService {
             }
         }
 
-        try {
-            //get instance
-            ObdQueryTask task =
-            //if not null, execute
-            new ObdQueryTask(getApplicationContext()).execute();
-        } catch (Exception e) {
-            Log.i(TAG, "OBD Query Error");
-            return;
+        ObdQueryTask task = ObdQueryTask.getInstance(getApplicationContext());
+
+        if (task != null) {
+            try {
+                task.execute();
+                Log.i(TAG, "Sent OBD query");
+            } catch (Exception e) {
+                Log.i(TAG, "OBD Query Error");
+                return;
+            }
+        } else {
+            Log.i(TAG, "no OBD Query task created");
         }
-
-        Log.i(TAG, "Sent OBD query");
-
-
     }
-
 }
+

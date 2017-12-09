@@ -16,8 +16,8 @@ import java.util.Set;
 
 public class ObdQueryTask extends AsyncTask {
 
-    private Context mContext;
     private final static String OBD_NAME = "OBDII";
+    private final static String TAG = "ObdQueryTask";
 
     private BluetoothSocket mSocket;
     private BluetoothDevice mDevice;
@@ -27,20 +27,40 @@ public class ObdQueryTask extends AsyncTask {
     private InputStream mInputStream;
     private OutputStream mOutputStream;
     private StringBuilder mStrBuffer = new StringBuilder();
-    private StringBuilder mResetCmdBuffer = new StringBuilder();
     private StringBuilder mSetProcBuffer = new StringBuilder();
     private StringBuilder mRpmCmdBuffer = new StringBuilder();
 
+    private Context mContext = null;
     private boolean mSpeedOverZero;
+    public static ObdQueryTask sObdQueryTask = null;
 
-    public ObdQueryTask(Context context) {
+
+    private ObdQueryTask(Context context) {
         mContext = context;
+    }
+
+    public static ObdQueryTask getInstance(Context context) {
+
+        if (sObdQueryTask != null) {
+            switch (sObdQueryTask.getStatus()) {
+
+                case FINISHED:
+                    sObdQueryTask = new ObdQueryTask(context);
+                    break;
+
+                default:
+                    return null;
+            }
+        } else {
+            sObdQueryTask = new ObdQueryTask(context);
+        }
+        return sObdQueryTask;
     }
 
     @Override
     protected Object doInBackground(Object[] objects) {
 
-        Log.i("+++++++++++++++++++", "do in background");
+        Log.i(TAG, "do in background");
 
         mSpeedOverZero = false;
 
@@ -65,29 +85,29 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
         } catch (IOException e) {
-            Log.i("+++++++++++++++++++", "no comm");
+            Log.i(TAG, "no comm");
             return null;
         }
 
         try {
             mSocket.connect();
         } catch (IOException e) {
-            Log.i("+++++++++++++++++++", "no connect");
-            Log.i("+++++++++++++++++++", e.toString());
+            Log.i(TAG, "no connect");
+            Log.i(TAG, e.toString());
             return null;
         }
 
         try {
             mInputStream = mSocket.getInputStream();
         } catch (IOException e) {
-            Log.i("+++++++++++++++++++", "no input stream");
+            Log.i(TAG, "no input stream");
             return null;
         }
 
         try {
             mOutputStream = mSocket.getOutputStream();
         } catch (IOException e) {
-            Log.i("+++++++++++++++++++", "no output stream");
+            Log.i(TAG, "no output stream");
             return null;
         }
 
@@ -95,14 +115,14 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mOutputStream.write(("AT Z\r").getBytes());
         } catch (IOException e) {
-            Log.i("+++++++++++++++++++", "no write reset to output");
+            Log.i(TAG, "no write reset to output");
             return null;
         }
 
         try {
             mOutputStream.flush();
         } catch (IOException e) {
-            Log.i("+++++++++++++++++++", "No flush");
+            Log.i(TAG, "No flush");
         }
 
         try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
@@ -114,7 +134,7 @@ public class ObdQueryTask extends AsyncTask {
             try {
                 b = (byte) mInputStream.read();
             } catch (IOException e) {
-                Log.i("+++++++++++++++++++", "input read error");
+                Log.i(TAG, "input read error");
                 return null;
             }
 
@@ -131,7 +151,7 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mOutputStream.write(("AT SP 0\r").getBytes());
         } catch (IOException ieo) {
-            Log.i("+++++++++++++++++++", "no write set to output");
+            Log.i(TAG, "no write set to output");
             return null;
         }
 
@@ -139,7 +159,7 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mOutputStream.flush();
         } catch (IOException ieo) {
-            Log.i("+++++++++++++++++++", "No flush");
+            Log.i(TAG, "No flush");
         }
 
 
@@ -150,7 +170,7 @@ public class ObdQueryTask extends AsyncTask {
             try {
                 b = (byte) mInputStream.read();
             } catch (IOException e) {
-                Log.i("+++++++++++++++++++", "input read error");
+                Log.i(TAG, "input read error");
                 return null;
             }
 
@@ -166,14 +186,14 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mOutputStream.write(("01 0D\r").getBytes());
         } catch (IOException e) {
-            Log.i("+++++++++++++++++++", "no write speed cmd to output");
+            Log.i(TAG, "no write speed cmd to output");
             return null;
         }
 
         try {
             mOutputStream.flush();
         } catch (IOException ieo) {
-            Log.i("+++++++++++++++++++", "No flush");
+            Log.i(TAG, "No flush");
         }
 
 
@@ -181,7 +201,7 @@ public class ObdQueryTask extends AsyncTask {
         try {
             Thread.sleep(600);
         } catch (Exception e) {
-            Log.i("+++++++++++++++++++", "thread sleep error");
+            Log.i(TAG, "thread sleep error");
             return null;
         }
 
@@ -190,7 +210,7 @@ public class ObdQueryTask extends AsyncTask {
             try {
                 b = (byte) mInputStream.read();
             } catch (IOException e) {
-                Log.i("+++++++++++++++++++", "input read error");
+                Log.i(TAG, "input read error");
                 return null;
             }
 
@@ -208,7 +228,7 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mSocket.close();
         } catch (IOException ioe) {
-            Log.i("+++++++++++++++++++", "no close");
+            Log.i(TAG, "no close");
         }
 
         String speedOutput = mRpmCmdBuffer.toString();
@@ -233,4 +253,5 @@ public class ObdQueryTask extends AsyncTask {
     }
 
 }
+
 
