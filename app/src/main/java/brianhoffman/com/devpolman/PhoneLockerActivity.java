@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -94,8 +95,14 @@ public class PhoneLockerActivity extends AppCompatActivity {
         mCloseBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+            if(android.os.Build.VERSION.SDK_INT >= 21) {
+                finishAndRemoveTask();
+            } else {
                 finish();
-                return;
+            }
+
+            return;
             }
         });
 
@@ -151,5 +158,16 @@ public class PhoneLockerActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(android.os.Build.VERSION.SDK_INT >= 21) {
+                finishAndRemoveTask();
+            } else {
+                finish();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 }
