@@ -15,7 +15,7 @@ public class StartupReceiver extends BroadcastReceiver {
 
         boolean isOn = QueryPreferences.isAlarmOn(context);
         if (!isOn)
-            ObdQueryService.setServiceAlarm(context, isOn);
+            ObdQueryService.setServiceAlarm(context, !isOn);
     }
 
 }

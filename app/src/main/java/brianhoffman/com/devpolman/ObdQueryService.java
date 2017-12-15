@@ -74,9 +74,9 @@ public class ObdQueryService extends IntentService {
                 Log.i(TAG, "OBD Query Error");
                 return;
             }
-        } //else {
-           // Log.i(TAG, "no OBD Query task created");
-        //}
+        } else {
+            Log.i(TAG, "no OBD Query task created");
+        }
     }
 }
 

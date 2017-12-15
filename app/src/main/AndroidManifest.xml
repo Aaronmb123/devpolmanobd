@@ -19,8 +19,7 @@
 
         </activity>
 
-        <activity android:name=".PhoneLockerActivity"
-                  >
+        <activity android:name=".PhoneLockerActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
             <category android:name="android.intent.category.LAUNCHER"/>

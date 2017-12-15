@@ -71,7 +71,9 @@ public class ObdQueryTask extends AsyncTask {
             return null;
         }
 
-        mBluetoothAdapter.enable();
+        if (!mBluetoothAdapter.isEnabled())
+            mBluetoothAdapter.enable();
+
         mPairedDevices = mBluetoothAdapter.getBondedDevices();
 
         for (BluetoothDevice device : mPairedDevices) {
@@ -244,7 +246,6 @@ public class ObdQueryTask extends AsyncTask {
 
 
         if (mSpeedOverZero) {
-
             DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
             devman.lockNow();
         }

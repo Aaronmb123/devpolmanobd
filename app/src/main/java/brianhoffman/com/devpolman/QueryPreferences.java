@@ -8,6 +8,7 @@ public class QueryPreferences {
 
     private static final String PREF_IS_ALARM_ON = "isAlarmOn";
     private static final String PREF_IS_DEVICE_POLICY_MANAGER_ON = "isDevPolManOn";
+    private static final String PREF_IS_SERVICE_RUNNING = "isServiceRunning";
     private static final String PREF_IS_PASSCODE_SET = "isPasscodeSet";
     private static final String HASHED_PASSCODE = "hashedPasscode";
 
@@ -19,6 +20,17 @@ public class QueryPreferences {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(PREF_IS_ALARM_ON, isOn)
+                .apply();
+    }
+
+    public static boolean isServiceRunning(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_SERVICE_RUNNING, false);
+    }
+
+    public static void setServiceRunningState(Context context, boolean state) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_IS_SERVICE_RUNNING, state)
                 .apply();
     }
 
