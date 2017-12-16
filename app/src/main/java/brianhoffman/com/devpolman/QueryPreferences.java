@@ -11,6 +11,8 @@ public class QueryPreferences {
     private static final String PREF_IS_SERVICE_RUNNING = "isServiceRunning";
     private static final String PREF_IS_PASSCODE_SET = "isPasscodeSet";
     private static final String HASHED_PASSCODE = "hashedPasscode";
+    private static final String PREF_QUERY_INTERVAL = "queryInterval";
+
 
     public static boolean isAlarmOn(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_ALARM_ON, false);
@@ -54,6 +56,17 @@ public class QueryPreferences {
                 .edit()
                 .putString(HASHED_PASSCODE, passcode)
                 .putBoolean(PREF_IS_PASSCODE_SET, true)
+                .apply();
+    }
+
+    public static int getQueryInterval(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(PREF_QUERY_INTERVAL, 500);
+    }
+
+    public static void setQueryInternal(Context context, int intervalInMillis) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putInt(PREF_QUERY_INTERVAL, intervalInMillis)
                 .apply();
     }
 
