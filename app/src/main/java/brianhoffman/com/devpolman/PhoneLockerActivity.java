@@ -39,7 +39,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
         mDriveSafeBTN = (Button) findViewById(R.id.start_obd_service_btn);
-        if (ObdQueryService.isServiceAlarmOn(getApplicationContext())) {
+        if (QueryPreferences.isServiceRunning(getApplicationContext())) {
             mDriveSafeBTN.setText("Stop DriveSafe Service");
         } else {
             mDriveSafeBTN.setText("Start DriveSafe Service");
@@ -67,7 +67,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
             mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
         }
 
-        if (QueryPreferences.isAlarmOn(getApplicationContext())) {
+        if (QueryPreferences.isServiceRunning(getApplicationContext())) {
             mDevicePolicyManagerBTN.setClickable(false);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));
         } else {
@@ -123,16 +123,16 @@ public class PhoneLockerActivity extends AppCompatActivity {
     }
 
     private void onToggleDriveSafeService() {
-        boolean isRunning = QueryPreferences.isAlarmOn(mContext);
+        boolean isRunning = QueryPreferences.isServiceRunning(mContext);
 
         if (isRunning) {
-            ObdQueryService.setServiceAlarm(mContext, false);
+            ObdQueryService.stopService(mContext);
             mDriveSafeBTN.setText("Start DriveSafe Service");
             mDevicePolicyManagerBTN.setClickable(true);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#000000"));
             Log.i(TAG, "ObdQueryService Stopped");
         } else {
-            ObdQueryService.setServiceAlarm(mContext, true);
+            ObdQueryService.startService(mContext);
             mDriveSafeBTN.setText("Stop DriveSafe Service");
             mDevicePolicyManagerBTN.setClickable(false);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));

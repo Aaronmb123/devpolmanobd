@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 
 public class QueryPreferences {
 
-    private static final String PREF_IS_ALARM_ON = "isAlarmOn";
     private static final String PREF_IS_DEVICE_POLICY_MANAGER_ON = "isDevPolManOn";
     private static final String PREF_IS_SERVICE_RUNNING = "isServiceRunning";
     private static final String PREF_IS_PASSCODE_SET = "isPasscodeSet";
@@ -14,16 +13,6 @@ public class QueryPreferences {
     private static final String PREF_QUERY_INTERVAL = "queryInterval";
 
 
-    public static boolean isAlarmOn(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_ALARM_ON, false);
-    }
-
-    public static void setAlarmOn(Context context, boolean isOn) {
-        PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putBoolean(PREF_IS_ALARM_ON, isOn)
-                .apply();
-    }
 
     public static boolean isServiceRunning(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_SERVICE_RUNNING, false);

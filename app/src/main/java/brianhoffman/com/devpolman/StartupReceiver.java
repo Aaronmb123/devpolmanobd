@@ -1,5 +1,6 @@
 package brianhoffman.com.devpolman;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +14,20 @@ public class StartupReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "Received broadcast intent: " + intent.getAction());
 
-        boolean isOn = QueryPreferences.isAlarmOn(context);
-        if (!isOn)
-            ObdQueryService.setServiceAlarm(context, !isOn);
+
+
+
+            ObdQueryService.startService(context);
     }
+
+//    private boolean isServiceRunning(ObdQueryService service) {
+//        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+//        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            if (serviceClass.getName().equals(service.service.getClassName())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
 }
