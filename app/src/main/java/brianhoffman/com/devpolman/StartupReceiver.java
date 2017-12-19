@@ -17,7 +17,7 @@ public class StartupReceiver extends BroadcastReceiver {
 
 
 
-            ObdQueryService.startService(context);
+           // ObdQueryService.startService(context);
     }
 
 //    private boolean isServiceRunning(ObdQueryService service) {
