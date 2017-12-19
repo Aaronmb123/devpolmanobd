@@ -1,5 +1,6 @@
 package brianhoffman.com.devpolman;
 
+import android.app.DownloadManager;
 import android.app.admin.DevicePolicyManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -18,6 +19,8 @@ public class ObdQueryTask extends AsyncTask {
 
     private final static String OBD_NAME = "OBDII";
     private final static String TAG = "ObdQueryTask";
+    private static final int LONG_QUERY_INTERVAL = 15000; // milliseconds
+    private static final int SHORT_QUERY_INTERVAL = 500;
 
     private BluetoothSocket mSocket;
     private BluetoothDevice mDevice;
@@ -31,7 +34,8 @@ public class ObdQueryTask extends AsyncTask {
     private StringBuilder mRpmCmdBuffer = new StringBuilder();
 
     private Context mContext = null;
-    private boolean mSpeedOverZero;
+    private boolean mRpmsOverZero;
+    private boolean mConnected;
     public static ObdQueryTask sObdQueryTask = null;
 
 
@@ -62,7 +66,7 @@ public class ObdQueryTask extends AsyncTask {
 
         Log.i(TAG, "do in background");
 
-        mSpeedOverZero = false;
+        mRpmsOverZero = false;
 
         // get obd
         try {
@@ -87,15 +91,20 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
         } catch (IOException e) {
-            Log.i(TAG, "no comm");
+            Log.i(TAG, "Could not create RF Comm Socket.");
             return null;
         }
 
         try {
             mSocket.connect();
+            //mConnected = true;
+            QueryPreferences.setQueryInterval(mContext, SHORT_QUERY_INTERVAL);
+            Log.i(TAG, "half second interval");
         } catch (IOException e) {
-            Log.i(TAG, "no connect");
+            Log.i(TAG, "Could not connect to OBD bluetooth device.");
             Log.i(TAG, e.toString());
+            QueryPreferences.setQueryInterval(mContext, LONG_QUERY_INTERVAL);
+            Log.i(TAG, "15 second interval");
             return null;
         }
 
@@ -185,10 +194,18 @@ public class ObdQueryTask extends AsyncTask {
         }
 
         // send speed command
+//        try {
+//            mOutputStream.write(("01 0D\r").getBytes());
+//        } catch (IOException e) {
+//            Log.i(TAG, "no write speed cmd to output");
+//            return null;
+//        }
+
+        // send rpm command
         try {
-            mOutputStream.write(("01 0D\r").getBytes());
+            mOutputStream.write(("01 0C\r").getBytes());
         } catch (IOException e) {
-            Log.i(TAG, "no write speed cmd to output");
+            Log.i(TAG, "Could not write RPM command to output stream.");
             return null;
         }
 
@@ -198,7 +215,6 @@ public class ObdQueryTask extends AsyncTask {
             Log.i(TAG, "No flush");
         }
 
-
         // read buffer
         try {
             Thread.sleep(600);
@@ -206,7 +222,6 @@ public class ObdQueryTask extends AsyncTask {
             Log.i(TAG, "thread sleep error");
             return null;
         }
-
 
         while (true) {
             try {
@@ -233,23 +248,23 @@ public class ObdQueryTask extends AsyncTask {
             Log.i(TAG, "no close");
         }
 
-        String speedOutput = mRpmCmdBuffer.toString();
-        speedOutput = speedOutput.trim();
+        String rpmOutput = mRpmCmdBuffer.toString();
+        rpmOutput = rpmOutput.trim();
 
         // decode
-        String speedKphStr = speedOutput.substring(speedOutput.length() - 2, speedOutput.length());
-        speedKphStr = "0x" + speedKphStr;
-        int speedKph = Integer.decode(speedKphStr);
+        String rpmStr = rpmOutput.substring(rpmOutput.length() - 2, rpmOutput.length());
+        rpmStr = "0x" + rpmStr;
+        int speedKph = Integer.decode(rpmStr);
 
         if (speedKph > 0)
-            mSpeedOverZero = true;
+            mRpmsOverZero = true;
 
 
-        if (mSpeedOverZero) {
+        if (mRpmsOverZero && QueryPreferences.isServiceRunning(mContext)) {
             DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
             devman.lockNow();
         }
-
+        Log.i(TAG, "do in background ending");
         return null;
     }
 
