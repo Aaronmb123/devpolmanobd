@@ -126,13 +126,13 @@ public class PhoneLockerActivity extends AppCompatActivity {
         boolean isRunning = QueryPreferences.isServiceRunning(mContext);
 
         if (isRunning) {
-            ObdQueryService.stopService(mContext);
+            ObdQueryService.stopDriveSafeService(mContext);
             mDriveSafeBTN.setText("Start DriveSafe Service");
             mDevicePolicyManagerBTN.setClickable(true);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#000000"));
             Log.i(TAG, "ObdQueryService Stopped");
         } else {
-            ObdQueryService.startService(mContext);
+            ObdQueryService.startDriveSafeService(mContext);
             mDriveSafeBTN.setText("Stop DriveSafe Service");
             mDevicePolicyManagerBTN.setClickable(false);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));
