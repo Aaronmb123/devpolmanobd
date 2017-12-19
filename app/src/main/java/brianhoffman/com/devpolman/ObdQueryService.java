@@ -27,12 +27,12 @@ public class ObdQueryService extends IntentService {
 
     }
 
-    @Override
-    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
-        return START_STICKY;
-
-    }
+//    @Override
+//    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+//        super.onStartCommand(intent, flags, startId);
+//        return START_STICKY;
+//
+//    }
 
     public static void startService(Context context) {
 
@@ -65,43 +65,46 @@ public class ObdQueryService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         Log.i(TAG, "OnHandleIntent");
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Log.i(TAG, "sending Query...");
+//        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//
+//        if (mBluetoothAdapter == null) {
+//            Toast.makeText(getApplicationContext(), "Device doesn't support Bluetooth", Toast.LENGTH_SHORT).show();
+//        } else {
+//            if (!mBluetoothAdapter.isEnabled()) {
+//                mBluetoothAdapter.enable();
+//                Log.i(TAG, "Bluetooth enabled");
+//
+//            }
+//        }
+//
+//        ObdQueryTask task = ObdQueryTask.getInstance(getApplicationContext());
+//
+//        if (task != null) {
+//            try {
+//                task.execute();
+//                Log.i(TAG, "Sent OBD query");
+//            } catch (Exception e) {
+//                Log.i(TAG, "OBD Query Error");
+//                return;
+//            }
+//        } else {
+//            Log.i(TAG, "no OBD Query task created");
+//        }
 
-        if (mBluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(), "Device doesn't support Bluetooth", Toast.LENGTH_SHORT).show();
-        } else {
-            if (!mBluetoothAdapter.isEnabled()) {
-                mBluetoothAdapter.enable();
-                Log.i(TAG, "Bluetooth enabled");
-
-            }
-        }
-
-        ObdQueryTask task = ObdQueryTask.getInstance(getApplicationContext());
-
-        if (task != null) {
-            try {
-                task.execute();
-                Log.i(TAG, "Sent OBD query");
-            } catch (Exception e) {
-                Log.i(TAG, "OBD Query Error");
-                return;
-            }
-        } else {
-            Log.i(TAG, "no OBD Query task created");
-        }
-
-        Log.i(TAG, "Sleeping...zzzzzzzzzzz....");
+        Log.i(TAG, "Sleeping...");
 
         try {
-            Thread.sleep(10000);
+            // query for sleep time based on interval set in QueryPreferences
+            Thread.sleep(500);
         } catch (Exception e) {
             Log.i(TAG, "Thread sleep error");
         }
 
-        startService(intent);
-
+        if (QueryPreferences.isServiceRunning(getApplicationContext())) {
+            Log.i(TAG, "Sending intent...");
+            startService(intent);
+        }
     }
-
 }
 
