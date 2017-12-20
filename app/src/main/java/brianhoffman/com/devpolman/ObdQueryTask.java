@@ -19,7 +19,7 @@ public class ObdQueryTask extends AsyncTask {
 
     private final static String OBD_NAME = "OBDII";
     private final static String TAG = "ObdQueryTask";
-    private static final int LONG_QUERY_INTERVAL = 15000; // milliseconds
+    private static final int LONG_QUERY_INTERVAL = 2000; // milliseconds
     private static final int SHORT_QUERY_INTERVAL = 500;
 
     private BluetoothSocket mSocket;
@@ -99,99 +99,99 @@ public class ObdQueryTask extends AsyncTask {
             mSocket.connect();
             //mConnected = true;
             QueryPreferences.setQueryInterval(mContext, SHORT_QUERY_INTERVAL);
-            Log.i(TAG, "half second interval");
+            Log.i(TAG, "short interval");
         } catch (IOException e) {
             Log.i(TAG, "Could not connect to OBD bluetooth device.");
             Log.i(TAG, e.toString());
             QueryPreferences.setQueryInterval(mContext, LONG_QUERY_INTERVAL);
-            Log.i(TAG, "15 second interval");
+            Log.i(TAG, "long interval");
             return null;
         }
 
         try {
             mInputStream = mSocket.getInputStream();
         } catch (IOException e) {
-            Log.i(TAG, "no input stream");
+            Log.i(TAG, "Could not create input stream.");
             return null;
         }
 
         try {
             mOutputStream = mSocket.getOutputStream();
         } catch (IOException e) {
-            Log.i(TAG, "no output stream");
+            Log.i(TAG, "Could not create output stream.");
             return null;
         }
 
-        // reset obd
-        try {
-            mOutputStream.write(("AT Z\r").getBytes());
-        } catch (IOException e) {
-            Log.i(TAG, "no write reset to output");
-            return null;
-        }
-
-        try {
-            mOutputStream.flush();
-        } catch (IOException e) {
-            Log.i(TAG, "No flush");
-        }
-
-        try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
-
+//        // reset obd
+//        try {
+//            mOutputStream.write(("AT Z\r").getBytes());
+//        } catch (IOException e) {
+//            Log.i(TAG, "no write reset to output");
+//            return null;
+//        }
+//
+//        try {
+//            mOutputStream.flush();
+//        } catch (IOException e) {
+//            Log.i(TAG, "No flush");
+//        }
+//
+//        try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
+//
         byte b;
         char c;
-
-        while (true) {
-            try {
-                b = (byte) mInputStream.read();
-            } catch (IOException e) {
-                Log.i(TAG, "input read error");
-                return null;
-            }
-
-            c = (char) b;
-
-            if (c == '>') {
-                break;
-            }
-            mStrBuffer.append(c);
-
-        }
-
-        // set protocol
-        try {
-            mOutputStream.write(("AT SP 0\r").getBytes());
-        } catch (IOException ieo) {
-            Log.i(TAG, "no write set to output");
-            return null;
-        }
-
-
-        try {
-            mOutputStream.flush();
-        } catch (IOException ieo) {
-            Log.i(TAG, "No flush");
-        }
-
-
-        try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
-
-
-        while (true) {
-            try {
-                b = (byte) mInputStream.read();
-            } catch (IOException e) {
-                Log.i(TAG, "input read error");
-                return null;
-            }
-
-            c = (char) b;
-            if (c == '>') {
-                break;
-            }
-            mSetProcBuffer.append(c);
-
-        }
+//
+//        while (true) {
+//            try {
+//                b = (byte) mInputStream.read();
+//            } catch (IOException e) {
+//                Log.i(TAG, "input read error");
+//                return null;
+//            }
+//
+//            c = (char) b;
+//
+//            if (c == '>') {
+//                break;
+//            }
+//            mStrBuffer.append(c);
+//
+//        }
+//
+//        // set protocol
+//        try {
+//            mOutputStream.write(("AT SP 0\r").getBytes());
+//        } catch (IOException ieo) {
+//            Log.i(TAG, "no write set to output");
+//            return null;
+//        }
+//
+//
+//        try {
+//            mOutputStream.flush();
+//        } catch (IOException ieo) {
+//            Log.i(TAG, "No flush");
+//        }
+//
+//
+//        try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//
+//        while (true) {
+//            try {
+//                b = (byte) mInputStream.read();
+//            } catch (IOException e) {
+//                Log.i(TAG, "input read error");
+//                return null;
+//            }
+//
+//            c = (char) b;
+//            if (c == '>') {
+//                break;
+//            }
+//            mSetProcBuffer.append(c);
+//
+//        }
 
         // send speed command
 //        try {
@@ -217,7 +217,7 @@ public class ObdQueryTask extends AsyncTask {
 
         // read buffer
         try {
-            Thread.sleep(600);
+            Thread.sleep(200);
         } catch (Exception e) {
             Log.i(TAG, "thread sleep error");
             return null;
@@ -239,9 +239,6 @@ public class ObdQueryTask extends AsyncTask {
 
         }
 
-        // closing socket before locking allows program to reconnect after unlock
-        // TODO save connection state somehow
-        // SharedPreferences
         try {
             mSocket.close();
         } catch (IOException ioe) {
@@ -259,9 +256,10 @@ public class ObdQueryTask extends AsyncTask {
         if (speedKph > 0)
             mRpmsOverZero = true;
 
-
+        //
         if (mRpmsOverZero && QueryPreferences.isServiceRunning(mContext)) {
             DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
+            Log.i(TAG, "Locking");
             devman.lockNow();
         }
         Log.i(TAG, "do in background ending");
