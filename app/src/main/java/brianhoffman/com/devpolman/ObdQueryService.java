@@ -6,19 +6,20 @@ import android.app.DownloadManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class ObdQueryService extends IntentService {
 
     private static final String TAG = "ObdQueryService";
-
-    private static int mNumberOfIntents;
-    private Context mContext;
 
     public static Intent newIntent(Context context) {
 
@@ -52,6 +53,29 @@ public class ObdQueryService extends IntentService {
         QueryPreferences.setServiceRunningState(context, false);
 
         Log.i(TAG, "stopService");
+
+    }
+
+    public static void runSocketTimeOut(final BluetoothSocket socket) {
+        Log.i(TAG, "runSocketTimeOut");
+        Runnable socketTimeout = new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "socketTimeOut");
+                try {
+                    Thread.sleep(5000);
+                } catch (Exception e) {}
+                if (!socket.isConnected()) {
+                    try {
+                        socket.close();
+                    } catch (IOException ioe) {}
+                    //QueryPreferences.setQueryInterval(mContext, LONG_QUERY_INTERVAL);
+                    //Log.i(TAG, "Long query interval set.");
+                }
+            }
+        };
+        new Thread(socketTimeout).start();
+
 
     }
 

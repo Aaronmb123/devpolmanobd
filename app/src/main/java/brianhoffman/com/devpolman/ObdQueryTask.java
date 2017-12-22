@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -37,7 +38,6 @@ public class ObdQueryTask extends AsyncTask {
     private boolean mRpmsOverZero;
     private boolean mConnected;
     public static ObdQueryTask sObdQueryTask = null;
-
 
     private ObdQueryTask(Context context) {
         mContext = context;
@@ -75,8 +75,11 @@ public class ObdQueryTask extends AsyncTask {
             return null;
         }
 
-        if (!mBluetoothAdapter.isEnabled())
-            mBluetoothAdapter.enable();
+//        if (mBluetoothAdapter.isEnabled()) {
+//            mBluetoothAdapter.disable();
+//        }
+
+        mBluetoothAdapter.enable();
 
         mPairedDevices = mBluetoothAdapter.getBondedDevices();
 
@@ -91,20 +94,28 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
         } catch (IOException e) {
-            Log.i(TAG, "Could not create RF Comm Socket.");
+            Log.e(TAG, "Could not create RF Comm Socket.");
             return null;
         }
+
+        //ObdQueryService.runSocketTimeOut(mSocket);
 
         try {
             mSocket.connect();
             //mConnected = true;
             QueryPreferences.setQueryInterval(mContext, SHORT_QUERY_INTERVAL);
-            Log.i(TAG, "short interval");
+            Log.i(TAG, "Short query interval set.");
         } catch (IOException e) {
+            QueryPreferences.setQueryInterval(mContext, LONG_QUERY_INTERVAL);
+            Log.i(TAG, "Long query interval set.");
             Log.i(TAG, "Could not connect to OBD Bluetooth device.");
             Log.i(TAG, e.toString());
-            QueryPreferences.setQueryInterval(mContext, LONG_QUERY_INTERVAL);
-            Log.i(TAG, "long interval");
+            try {
+                mSocket.close();
+            } catch (IOException ioe) {
+                Log.e(TAG, "Could not close socket.");
+            }
+
             return null;
         }
 
@@ -252,29 +263,34 @@ public class ObdQueryTask extends AsyncTask {
         // decode
         String rpmStr = rpmOutput.substring(rpmOutput.length() - 2, rpmOutput.length());
         rpmStr = "0x" + rpmStr;
-        int speedKph;
+        int rpms = 0;
 
         try {
-            speedKph = Integer.decode(rpmStr);
+            rpms = Integer.decode(rpmStr);
         } catch (RuntimeException e) {
+            Log.i(TAG, "Decode error");
+
             return null;
         }
 
-        if (speedKph > 0)
+        if (rpms > 0)
             mRpmsOverZero = true;
 
         //
         if (mRpmsOverZero && QueryPreferences.isServiceRunning(mContext)) {
+
             DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
-            Log.i(TAG, "Locking");
+
             try {
                 devman.lockNow();
-            } catch (RuntimeException rte) {
+                // set message_sent flag false
+                Log.i(TAG, "Locking");
+
+            } catch (Exception e) {
                 // send sms
-                // set message_sent flag
-                return null;
+                Log.i(TAG, "sending sms...");
+                // set message_sent flag true
             }
-            // unset message_sent flag
         }
         Log.i(TAG, "do in background ending");
 
