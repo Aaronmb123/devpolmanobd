@@ -56,6 +56,8 @@ public class ObdQueryService extends IntentService {
 
     }
 
+    // work in progress (12-22-17)
+    // fake a shorter timeout for socket.connect
     public static void runSocketTimeOut(final BluetoothSocket socket) {
         Log.i(TAG, "runSocketTimeOut");
         Runnable socketTimeout = new Runnable() {
@@ -76,7 +78,6 @@ public class ObdQueryService extends IntentService {
         };
         new Thread(socketTimeout).start();
 
-
     }
 
     public ObdQueryService() {
@@ -89,40 +90,44 @@ public class ObdQueryService extends IntentService {
 
         Log.i(TAG, "OnHandleIntent");
 
-//        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//
-//        if (!mBluetoothAdapter.isEnabled()) {
-//            mBluetoothAdapter.enable();
-//            Log.i(TAG, "Bluetooth enabled");
-//        }
+        if (!QueryPreferences.isDevicePolicyManagerOn(this)) {
+            // send message
+            Log.i(TAG, "DevPolMan Off. Sending text...");
 
-        ObdQueryTask task = ObdQueryTask.getInstance(getApplicationContext());
-
-        if (task != null) {
-            try {
-                task.execute();
-                Log.i(TAG, "Sent OBD query");
-            } catch (Exception e) {
-                Log.i(TAG, "OBD Query Error");
-                return;
-            }
+            // if send message
+                // set message flag true
         } else {
-            Log.i(TAG, "no OBD Query task created");
-        }
+            // if message flag true
+                // set message flag false
 
-        //Log.i(TAG, "Sleeping...");
+            ObdQueryTask task = ObdQueryTask.getInstance(getApplicationContext());
 
-        try {
-            int interval = QueryPreferences.getQueryInterval(getApplicationContext());
-            Log.i(TAG, "Sleep interval: " + String.valueOf(interval));
-            Thread.sleep(interval);
-        } catch (Exception e) {
-            Log.i(TAG, "Thread sleep error");
-        }
+            if (task != null) {
+                try {
+                    task.execute();
+                    Log.i(TAG, "Sent OBD query");
+                } catch (Exception e) {
+                    Log.i(TAG, "OBD Query Error");
+                    return;
+                }
+            } else {
+                Log.i(TAG, "no OBD Query task created");
+            }
 
-        if (QueryPreferences.isServiceRunning(getApplicationContext())) {
-            Log.i(TAG, "Sending new intent...");
-            startService(intent);
+            //Log.i(TAG, "Sleeping...");
+
+            try {
+                int interval = QueryPreferences.getQueryInterval(this);
+                Log.i(TAG, "Sleep interval: " + String.valueOf(interval));
+                Thread.sleep(interval);
+            } catch (Exception e) {
+                Log.i(TAG, "Thread sleep error");
+            }
+
+            if (QueryPreferences.isServiceRunning(this)) {
+                Log.i(TAG, "Sending new intent...");
+                startService(intent);
+            }
         }
     }
 }
