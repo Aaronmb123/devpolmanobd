@@ -9,7 +9,7 @@ public class QueryPreferences {
     private static final String PREF_IS_DEVICE_POLICY_MANAGER_ON = "isDevPolManOn";
     private static final String PREF_IS_SERVICE_RUNNING = "isServiceRunning";
     private static final String PREF_IS_PASSCODE_SET = "isPasscodeSet";
-    private static final String HASHED_PASSCODE = "hashedPasscode";
+    private static final String PREF_HASHED_PASSCODE = "hashedPasscode";
     private static final String PREF_QUERY_INTERVAL = "queryInterval";
 
     public static boolean isServiceRunning(Context context) {
@@ -41,13 +41,13 @@ public class QueryPreferences {
     public static void setPasscode(Context context, String passcode) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
-                .putString(HASHED_PASSCODE, passcode)
+                .putString(PREF_HASHED_PASSCODE, passcode)
                 .putBoolean(PREF_IS_PASSCODE_SET, true)
                 .apply();
     }
 
     public static int getQueryInterval(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(PREF_QUERY_INTERVAL, 500);
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(PREF_QUERY_INTERVAL, 5000);
     }
 
     public static void setQueryInterval(Context context, int intervalInMillis) {
@@ -56,5 +56,7 @@ public class QueryPreferences {
                 .putInt(PREF_QUERY_INTERVAL, intervalInMillis)
                 .apply();
     }
+
+    // flag for sending text
 
 }
