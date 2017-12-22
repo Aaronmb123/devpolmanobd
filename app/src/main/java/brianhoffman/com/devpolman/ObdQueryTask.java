@@ -19,7 +19,7 @@ public class ObdQueryTask extends AsyncTask {
 
     private final static String OBD_NAME = "OBDII";
     private final static String TAG = "ObdQueryTask";
-    private static final int LONG_QUERY_INTERVAL = 2000; // milliseconds
+    private static final int LONG_QUERY_INTERVAL = 5000; // milliseconds
     private static final int SHORT_QUERY_INTERVAL = 500;
 
     private BluetoothSocket mSocket;
@@ -29,8 +29,8 @@ public class ObdQueryTask extends AsyncTask {
 
     private InputStream mInputStream;
     private OutputStream mOutputStream;
-    private StringBuilder mStrBuffer = new StringBuilder();
-    private StringBuilder mSetProcBuffer = new StringBuilder();
+    //private StringBuilder mStrBuffer = new StringBuilder();
+    //private StringBuilder mSetProcBuffer = new StringBuilder();
     private StringBuilder mRpmCmdBuffer = new StringBuilder();
 
     private Context mContext = null;
@@ -101,7 +101,7 @@ public class ObdQueryTask extends AsyncTask {
             QueryPreferences.setQueryInterval(mContext, SHORT_QUERY_INTERVAL);
             Log.i(TAG, "short interval");
         } catch (IOException e) {
-            Log.i(TAG, "Could not connect to OBD bluetooth device.");
+            Log.i(TAG, "Could not connect to OBD Bluetooth device.");
             Log.i(TAG, e.toString());
             QueryPreferences.setQueryInterval(mContext, LONG_QUERY_INTERVAL);
             Log.i(TAG, "long interval");
@@ -122,6 +122,9 @@ public class ObdQueryTask extends AsyncTask {
             return null;
         }
 
+        byte b;
+        char c;
+
 //        // reset obd
 //        try {
 //            mOutputStream.write(("AT Z\r").getBytes());
@@ -138,8 +141,6 @@ public class ObdQueryTask extends AsyncTask {
 //
 //        try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
 //
-        byte b;
-        char c;
 //
 //        while (true) {
 //            try {
@@ -212,14 +213,14 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mOutputStream.flush();
         } catch (IOException ieo) {
-            Log.i(TAG, "No flush");
+            Log.i(TAG, "Error flushing output stream.");
         }
 
         // read buffer
         try {
             Thread.sleep(200);
         } catch (Exception e) {
-            Log.i(TAG, "thread sleep error");
+            Log.i(TAG, "Thread sleep error.");
             return null;
         }
 
@@ -227,7 +228,7 @@ public class ObdQueryTask extends AsyncTask {
             try {
                 b = (byte) mInputStream.read();
             } catch (IOException e) {
-                Log.i(TAG, "input read error");
+                Log.i(TAG, "Error reading input stream.");
                 return null;
             }
 
@@ -242,7 +243,7 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mSocket.close();
         } catch (IOException ioe) {
-            Log.i(TAG, "no close");
+            Log.i(TAG, "Error closing Bluetooth socket.");
         }
 
         String rpmOutput = mRpmCmdBuffer.toString();
@@ -251,7 +252,13 @@ public class ObdQueryTask extends AsyncTask {
         // decode
         String rpmStr = rpmOutput.substring(rpmOutput.length() - 2, rpmOutput.length());
         rpmStr = "0x" + rpmStr;
-        int speedKph = Integer.decode(rpmStr);
+        int speedKph;
+
+        try {
+            speedKph = Integer.decode(rpmStr);
+        } catch (RuntimeException e) {
+            return null;
+        }
 
         if (speedKph > 0)
             mRpmsOverZero = true;
@@ -260,9 +267,17 @@ public class ObdQueryTask extends AsyncTask {
         if (mRpmsOverZero && QueryPreferences.isServiceRunning(mContext)) {
             DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
             Log.i(TAG, "Locking");
-            devman.lockNow();
+            try {
+                devman.lockNow();
+            } catch (RuntimeException rte) {
+                // send sms
+                // set message_sent flag
+                return null;
+            }
+            // unset message_sent flag
         }
         Log.i(TAG, "do in background ending");
+
         return null;
     }
 
