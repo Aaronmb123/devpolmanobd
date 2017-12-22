@@ -276,22 +276,18 @@ public class ObdQueryTask extends AsyncTask {
         if (rpms > 0)
             mRpmsOverZero = true;
 
-        //
-        if (mRpmsOverZero && QueryPreferences.isServiceRunning(mContext)) {
+        if (mRpmsOverZero && QueryPreferences.isServiceRunning(mContext)
+                && QueryPreferences.isDevicePolicyManagerOn(mContext)) {
 
             DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
 
             try {
                 devman.lockNow();
-                // set message_sent flag false
                 Log.i(TAG, "Locking");
 
-            } catch (Exception e) {
-                // send sms
-                Log.i(TAG, "sending sms...");
-                // set message_sent flag true
-            }
+            } catch (Exception e) { }
         }
+
         Log.i(TAG, "do in background ending");
 
         return null;
