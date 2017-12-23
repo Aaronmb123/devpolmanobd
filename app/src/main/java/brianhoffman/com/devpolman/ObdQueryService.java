@@ -7,6 +7,7 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothSocket;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -21,7 +22,10 @@ public class ObdQueryService extends IntentService {
 
     private static final String TAG = "ObdQueryService";
 
+    private static ComponentName mComponentName;
+
     public static Intent newIntent(Context context) {
+        mComponentName = new ComponentName(context, Controller.class);
 
         return new Intent(context, ObdQueryService.class);
 
@@ -90,15 +94,7 @@ public class ObdQueryService extends IntentService {
 
         Log.i(TAG, "OnHandleIntent");
 
-        if (!QueryPreferences.isDevicePolicyManagerOn(this)) {
-            // send message
-            Log.i(TAG, "DevPolMan Off. Sending text...");
-
-            // if send message
-                // set message flag true
-        } else {
-            // if message flag true
-                // set message flag false
+        if (QueryPreferences.isDevicePolicyManagerOn(this)) {
 
             ObdQueryTask task = ObdQueryTask.getInstance(getApplicationContext());
 
@@ -113,21 +109,19 @@ public class ObdQueryService extends IntentService {
             } else {
                 Log.i(TAG, "no OBD Query task created");
             }
+        }
 
-            //Log.i(TAG, "Sleeping...");
+        try {
+            int interval = QueryPreferences.getQueryInterval(this);
+            Log.i(TAG, "Sleep interval: " + String.valueOf(interval));
+            Thread.sleep(interval);
+        } catch (Exception e) {
+            Log.i(TAG, "Thread sleep error");
+        }
 
-            try {
-                int interval = QueryPreferences.getQueryInterval(this);
-                Log.i(TAG, "Sleep interval: " + String.valueOf(interval));
-                Thread.sleep(interval);
-            } catch (Exception e) {
-                Log.i(TAG, "Thread sleep error");
-            }
-
-            if (QueryPreferences.isServiceRunning(this)) {
-                Log.i(TAG, "Sending new intent...");
-                startService(intent);
-            }
+        if (QueryPreferences.isServiceRunning(this)) {
+            Log.i(TAG, "Sending new intent...");
+            startService(intent);
         }
     }
 }

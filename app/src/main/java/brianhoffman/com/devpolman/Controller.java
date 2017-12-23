@@ -11,13 +11,24 @@ public class Controller extends DeviceAdminReceiver {
 
     private static final String TAG = "DeviceAdminReceiver";
 
+    // add logic to send texts only if disabled outside of app
+
     @Override
     public void onEnabled(Context context, Intent intent) {
-        Log.i(TAG, "Enabled");
+        QueryPreferences.setDevicePolicyManagerOn(context, true);
+
+        // send message
+        Log.i(TAG, "DevPolMan On. Sending text...");
+        Log.i(TAG, "DevPolMan Enabled");
+
     }
 
     @Override
     public void onDisabled(Context context, Intent intent) {
-        Log.i(TAG, "Disabled");
+        QueryPreferences.setDevicePolicyManagerOn(context, false);
+
+        // send message
+        Log.i(TAG, "DevPolMan Off. Sending text...");
+        Log.i(TAG, "DevPolMan Disabled");
     }
 }

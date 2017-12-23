@@ -11,7 +11,6 @@ public class QueryPreferences {
     private static final String PREF_IS_PASSCODE_SET = "isPasscodeSet";
     private static final String PREF_HASHED_PASSCODE = "hashedPasscode";
     private static final String PREF_QUERY_INTERVAL = "queryInterval";
-    private static final String PREF_IS_MESSAGE_SENT = "messageSent";
 
     public static boolean isServiceRunning(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_SERVICE_RUNNING, false);
@@ -55,18 +54,6 @@ public class QueryPreferences {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putInt(PREF_QUERY_INTERVAL, intervalInMillis)
-                .apply();
-    }
-
-    public static boolean isMessageSent(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_MESSAGE_SENT, false);
-
-    }
-
-    public static void setMessageSentState(Context context, boolean isSent) {
-        PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putBoolean(PREF_IS_MESSAGE_SENT, isSent)
                 .apply();
     }
 

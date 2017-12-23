@@ -151,7 +151,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     onToggleDevicePolicyManager(true, mContext);
                 } else {
-                    Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Locker not activated!", Toast.LENGTH_SHORT).show();
                 }
                 return;
         }
@@ -169,5 +169,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    // onResume update buttons
 
 }
