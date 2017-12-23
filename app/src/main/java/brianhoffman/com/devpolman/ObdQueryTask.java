@@ -30,7 +30,7 @@ public class ObdQueryTask extends AsyncTask {
 
     private InputStream mInputStream;
     private OutputStream mOutputStream;
-    //private StringBuilder mStrBuffer = new StringBuilder();
+    private StringBuilder mStrBuffer = new StringBuilder();
     //private StringBuilder mSetProcBuffer = new StringBuilder();
     private StringBuilder mRpmCmdBuffer = new StringBuilder();
 
@@ -94,7 +94,7 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
         } catch (IOException e) {
-            Log.e(TAG, "Could not create RF Comm Socket.");
+            Log.e(TAG, "Could not create RF Comm Socket");
             return null;
         }
 
@@ -104,16 +104,16 @@ public class ObdQueryTask extends AsyncTask {
             mSocket.connect();
             //mConnected = true;
             QueryPreferences.setQueryInterval(mContext, SHORT_QUERY_INTERVAL);
-            Log.i(TAG, "Short query interval set.");
+            Log.i(TAG, "Short query interval set");
         } catch (IOException e) {
             QueryPreferences.setQueryInterval(mContext, LONG_QUERY_INTERVAL);
-            Log.i(TAG, "Long query interval set.");
-            Log.i(TAG, "Could not connect to OBD Bluetooth device.");
+            Log.i(TAG, "Long query interval set");
+            Log.i(TAG, "Could not connect to OBD Bluetooth device");
             Log.i(TAG, e.toString());
             try {
                 mSocket.close();
             } catch (IOException ioe) {
-                Log.e(TAG, "Could not close socket.");
+                Log.e(TAG, "Could not close socket");
             }
 
             return null;
@@ -122,14 +122,14 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mInputStream = mSocket.getInputStream();
         } catch (IOException e) {
-            Log.i(TAG, "Could not create input stream.");
+            Log.i(TAG, "Could not create input stream");
             return null;
         }
 
         try {
             mOutputStream = mSocket.getOutputStream();
         } catch (IOException e) {
-            Log.i(TAG, "Could not create output stream.");
+            Log.i(TAG, "Could not create output stream");
             return null;
         }
 
@@ -137,38 +137,36 @@ public class ObdQueryTask extends AsyncTask {
         char c;
 
         // reset obd
-//        try {
-//            mOutputStream.write(("AT Z\r").getBytes());
-//        } catch (IOException e) {
-//            Log.i(TAG, "Could not reset OBD.");
-//            return null;
-//        }
-//
-//        try {
-//            mOutputStream.flush();
-//        } catch (IOException e) {
-//            Log.i(TAG, "No flush");
-//        }
-//
-//        try { Thread.sleep(600); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//
-//        while (true) {
-//            try {
-//                b = (byte) mInputStream.read();
-//            } catch (IOException e) {
-//                Log.i(TAG, "input read error");
-//                return null;
-//            }
-//
-//            c = (char) b;
-//
-//            if (c == '>') {
-//                break;
-//            }
-//            mStrBuffer.append(c);
-//
-//        }
+        try {
+            mOutputStream.write(("AT Z\r").getBytes());
+        } catch (IOException e) {
+            Log.i(TAG, "Could not reset OBD");
+            return null;
+        }
+
+        try {
+            mOutputStream.flush();
+        } catch (IOException e) {
+            Log.i(TAG, "Error flushing output buffer");
+        }
+
+        try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
+
+
+        while (true) {
+            try {
+                b = (byte) mInputStream.read();
+            } catch (IOException e) {
+                Log.i(TAG, "Input Stream Read Error");
+                return null;
+            }
+
+            c = (char) b;
+
+            if (c == '>') {
+                break;
+            }
+        }
 //
 //        // set protocol
 //        try {
@@ -218,21 +216,21 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mOutputStream.write(("01 0C\r").getBytes());
         } catch (IOException e) {
-            Log.i(TAG, "Could not write RPM command to output stream.");
+            Log.i(TAG, "Could not write RPM command to output stream");
             return null;
         }
 
-        try {
-            mOutputStream.flush();
-        } catch (IOException ieo) {
-            Log.i(TAG, "Error flushing output stream.");
-        }
+//        try {
+//            mOutputStream.flush();
+//        } catch (IOException ieo) {
+//            Log.i(TAG, "Error flushing output stream.");
+//        }
 
         // read buffer
         try {
-            Thread.sleep(200);
+            Thread.sleep(50);
         } catch (Exception e) {
-            Log.i(TAG, "Thread sleep error.");
+            Log.i(TAG, "Thread sleep error");
             return null;
         }
 
@@ -240,7 +238,7 @@ public class ObdQueryTask extends AsyncTask {
             try {
                 b = (byte) mInputStream.read();
             } catch (IOException e) {
-                Log.i(TAG, "Error reading input stream.");
+                Log.i(TAG, "Error reading input stream");
                 return null;
             }
 
@@ -255,7 +253,7 @@ public class ObdQueryTask extends AsyncTask {
         try {
             mSocket.close();
         } catch (IOException ioe) {
-            Log.i(TAG, "Error closing Bluetooth socket.");
+            Log.i(TAG, "Error closing Bluetooth socket");
         }
 
         String rpmOutput = mRpmCmdBuffer.toString();
