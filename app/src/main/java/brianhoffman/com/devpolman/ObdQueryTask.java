@@ -136,11 +136,11 @@ public class ObdQueryTask extends AsyncTask {
         byte b;
         char c;
 
-//        // reset obd
+        // reset obd
 //        try {
 //            mOutputStream.write(("AT Z\r").getBytes());
 //        } catch (IOException e) {
-//            Log.i(TAG, "no write reset to output");
+//            Log.i(TAG, "Could not reset OBD.");
 //            return null;
 //        }
 //
@@ -214,6 +214,7 @@ public class ObdQueryTask extends AsyncTask {
 //        }
 
         // send rpm command
+        // rpm command returns two bytes in a five-char, string format, i.e., "A4 60"
         try {
             mOutputStream.write(("01 0C\r").getBytes());
         } catch (IOException e) {
@@ -261,8 +262,11 @@ public class ObdQueryTask extends AsyncTask {
         rpmOutput = rpmOutput.trim();
 
         // decode
-        String rpmStr = rpmOutput.substring(rpmOutput.length() - 2, rpmOutput.length());
+        String rpmStr = rpmOutput.substring(rpmOutput.length() - 5, rpmOutput.length());
+        rpmStr = rpmStr.replace(" ", "");
         rpmStr = "0x" + rpmStr;
+        Log.i(TAG, "Rpm: " + String.valueOf(rpmStr));
+
         int rpms = 0;
 
         try {
