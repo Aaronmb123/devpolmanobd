@@ -98,8 +98,6 @@ public class ObdQueryTask extends AsyncTask {
             return null;
         }
 
-        //ObdQueryService.runSocketTimeOut(mSocket);
-
         try {
             mSocket.connect();
             //mConnected = true;
@@ -260,11 +258,12 @@ public class ObdQueryTask extends AsyncTask {
         rpmOutput = rpmOutput.trim();
 
         // decode
+        // OBD returns a string of text
+        // we only want the last 5 chars
         String rpmStr = rpmOutput.substring(rpmOutput.length() - 5, rpmOutput.length());
         rpmStr = rpmStr.replace(" ", "");
         rpmStr = "0x" + rpmStr;
         Log.i(TAG, "Rpm: " + String.valueOf(rpmStr));
-
         int rpms = 0;
 
         try {
