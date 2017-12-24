@@ -16,6 +16,8 @@ public class BootReceiver extends BroadcastReceiver {
 
         if (QueryPreferences.isServiceRunning(context)) {
             ObdQueryService.startDriveSafeService(context);
+            Intent PhoneLockerIntent = new Intent(context, PhoneLockerActivity.class);
+            context.startActivity(PhoneLockerIntent);
             Log.i(TAG, "starting drive safe");
         }
 
