@@ -3,6 +3,7 @@ package brianhoffman.com.devpolman;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 
@@ -12,12 +13,13 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG, "...");
+        Log.i(TAG, "onReceive...");
 
         if (QueryPreferences.isServiceRunning(context)) {
             ObdQueryService.startDriveSafeService(context);
-            Intent PhoneLockerIntent = new Intent(context, PhoneLockerActivity.class);
-            context.startActivity(PhoneLockerIntent);
+            Intent phoneLockerIntent = new Intent(context, PhoneLockerActivity.class);
+            phoneLockerIntent.putExtra("QuitPhoneLockerActivity", true);
+            context.startActivity(phoneLockerIntent);
             Log.i(TAG, "starting drive safe");
         }
 
