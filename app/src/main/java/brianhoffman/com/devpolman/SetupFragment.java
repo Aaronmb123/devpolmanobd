@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class CreatePasscodeFragment extends Fragment {
+public class SetupFragment extends Fragment {
 
     private static final String HASHED_PASSCODE = "passcode";
 
@@ -24,7 +24,7 @@ public class CreatePasscodeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_create_passcode, container, false);
+        View view = inflater.inflate(R.layout.fragment_setup, container, false);
 
         mEnterPasscodeET = (EditText) view.findViewById(R.id.enter_passcode_et);
         mReEnterPasscodeET = (EditText) view.findViewById(R.id.re_enter_passcode_et);
