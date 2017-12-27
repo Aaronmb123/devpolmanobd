@@ -34,7 +34,7 @@ public class PasscodeActivity extends AppCompatActivity {
             if (mIsPasscodeSet)
                 fragment = EnterPasscodeFragment();
             else
-                fragment = CreatePasscodeFragment();
+                fragment = SetupFragment();
             fm.beginTransaction().add(R.id.activity_passcode_fragment_container, fragment).commit();
         }
     }
@@ -44,9 +44,9 @@ public class PasscodeActivity extends AppCompatActivity {
         return new EnterPasscodeFragment();
     }
 
-    protected Fragment CreatePasscodeFragment() {
+    protected Fragment SetupFragment() {
 
-        return new CreatePasscodeFragment();
+        return new SetupFragment();
     }
 
 }

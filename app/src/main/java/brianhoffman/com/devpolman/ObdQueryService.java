@@ -25,7 +25,7 @@ public class ObdQueryService extends IntentService {
     private static ComponentName mComponentName;
 
     public static Intent newIntent(Context context) {
-        mComponentName = new ComponentName(context, Controller.class);
+        mComponentName = new ComponentName(context, DevicePolicyWatcher.class);
 
         return new Intent(context, ObdQueryService.class);
 

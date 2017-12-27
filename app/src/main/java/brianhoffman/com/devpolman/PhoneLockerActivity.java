@@ -55,7 +55,7 @@ public class PhoneLockerActivity extends AppCompatActivity {
         mCloseBTN = (Button) findViewById(R.id.close_btn);
 
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-        mComponentName = new ComponentName(PhoneLockerActivity.this, Controller.class);
+        mComponentName = new ComponentName(PhoneLockerActivity.this, DevicePolicyWatcher.class);
 
         if (QueryPreferences.isDevicePolicyManagerOn(getApplicationContext())) {
             mDevicePolicyManagerBTN.setText("Disable Locking Capability");
@@ -105,7 +105,6 @@ public class PhoneLockerActivity extends AppCompatActivity {
             return;
             }
         });
-
     }
 
     private void onToggleDevicePolicyManager(boolean isActive, Context context) {
@@ -172,4 +171,19 @@ public class PhoneLockerActivity extends AppCompatActivity {
 
     // onResume update buttons
 
+
+    @Override
+    protected void onResume() {
+
+//        Intent intent = getIntent();
+//
+//        if (intent.getBooleanExtra("QuitPhoneLockerActivity", false)) {
+//            Log.i(TAG, "QuitPhoneLockerActivity true... calling onDestroy");
+//            finishAndRemoveTask();
+//        }
+
+        super.onResume();
+
+
+    }
 }

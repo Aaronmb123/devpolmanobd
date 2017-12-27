@@ -286,7 +286,10 @@ public class ObdQueryTask extends AsyncTask {
                 devman.lockNow();
                 Log.i(TAG, "Locking");
 
-            } catch (Exception e) { }
+            } catch (Exception e) {
+                Log.i(TAG, "lockNow() failed");
+                Log.i(TAG, String.valueOf(e));
+            }
         }
 
         Log.i(TAG, "do in background ending");
