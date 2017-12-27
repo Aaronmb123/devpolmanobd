@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-public class Controller extends DeviceAdminReceiver {
+public class DevicePolicyWatcher extends DeviceAdminReceiver {
 
     private static final String TAG = "DeviceAdminReceiver";
 
