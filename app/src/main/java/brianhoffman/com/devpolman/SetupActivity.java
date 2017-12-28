@@ -14,9 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class PasscodeActivity extends AppCompatActivity {
+public class SetupActivity extends AppCompatActivity {
 
-    private static final String TAG = "PasscodeActivity";
+    private static final String TAG = "SetupActivity";
     private boolean mIsPasscodeSet;
 
     @Override

@@ -16,7 +16,7 @@ public class DevicePolicyWatcher extends DeviceAdminReceiver {
     @Override
     public void onEnabled(Context context, Intent intent) {
         QueryPreferences.setDevicePolicyManagerOn(context, true);
-
+        // send alert
         // send message
         Log.i(TAG, "DevPolMan On. Sending text...");
         Log.i(TAG, "DevPolMan Enabled");

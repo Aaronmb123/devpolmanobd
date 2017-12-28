@@ -15,20 +15,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".PasscodeActivity">
+        <activity android:name=".SetupActivity"
+                  android:label="DriveSafe for Teens">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
 
         </activity>
 
-        <activity android:name=".PhoneLockerActivity"
-            android:label="DriveSafe for Teens">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN"/>
-            <category android:name="android.intent.category.LAUNCHER"/>
-        </intent-filter>
-        </activity>
+        <activity android:name=".PhoneLockerActivity" />
 
         <receiver
-            android:name=".Controller"
+            android:name=".DevicePolicyWatcher"
             android:description="@string/app_description"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >
