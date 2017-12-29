@@ -30,7 +30,7 @@ public class DriveSafeActivity extends AppCompatActivity {
         mIsPasscodeSet = QueryPreferences.isPasscodeSet(this);
         Log.i(TAG, String.valueOf(mIsPasscodeSet));
 
-        // see if intent arg exists
+        // see if phone has been restarted
         boolean phoneRestarted = getIntent().getBooleanExtra(bootUpArg, false);
 
         FragmentManager fm = getSupportFragmentManager();
