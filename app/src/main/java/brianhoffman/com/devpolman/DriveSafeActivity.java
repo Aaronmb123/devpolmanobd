@@ -1,5 +1,7 @@
 package brianhoffman.com.devpolman;
 
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +22,10 @@ public class DriveSafeActivity extends AppCompatActivity {
     private static final String bootUpArg = "QuitDriveSafeActivity";
 
     private boolean mIsPasscodeSet;
+
+    private static final int RESULT_ENABLE = 1;
+    private static DevicePolicyManager mDevicePolicyManager;
+    private ComponentName mComponentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
