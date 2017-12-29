@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,14 @@ import android.widget.Toast;
 
 public class EnterPasscodeFragment extends Fragment {
 
+    private static final String TAG = "EnterPasscodeFragment";
+
     private static final String HASHED_PASSCODE = "hashedPasscode";
 
     private EditText mEnterPasscodeET;
     private Button mPasscodeBTN;
 
-    //use SharePreferences to store hashed password
+    //use SQLite to store hashed password
 
 
     @Nullable
@@ -34,16 +38,20 @@ public class EnterPasscodeFragment extends Fragment {
         mPasscodeBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String passcode = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(HASHED_PASSCODE, null);
+
                 if (mEnterPasscodeET.getText().toString().equals(passcode)) {
 
-                    Intent intent = new Intent(getActivity(), PhoneLockerActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
+                    // swap fragments to EnableDriveSafeFragment
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    Fragment fragment = new EnterPasscodeFragment();
+                    fm.beginTransaction().add(R.id.activity_passcode_fragment_container, fragment).commit();
+                    Log.i(TAG, "Swapping in EnableDriveSafeFragment");
 
                 } else {
                     mEnterPasscodeET.setText("");
-                    Toast.makeText(getActivity(),"Passcode incorrect", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Passcode Incorrect", Toast.LENGTH_SHORT).show();
                 }
             }
         });
