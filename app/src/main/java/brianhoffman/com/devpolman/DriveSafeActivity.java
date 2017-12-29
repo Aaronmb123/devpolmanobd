@@ -26,14 +26,16 @@ public class DriveSafeActivity extends AppCompatActivity {
     private boolean mIsPasscodeSet;
 
     private static final int RESULT_ENABLE = 1;
-    //private static DevicePolicyManager mDevicePolicyManager;
-    //private ComponentName mComponentName;
+    public static DevicePolicyManager mDevicePolicyManager;
+    public ComponentName mComponentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passcode);
 
+        mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+        mComponentName = new ComponentName(this, DevicePolicyWatcher.class);
 
         // see if passcode has been created yet
         mIsPasscodeSet = QueryPreferences.isPasscodeSet(this);
@@ -97,5 +99,8 @@ public class DriveSafeActivity extends AppCompatActivity {
         return new BootUpFragment();
     }
 
+    public static DevicePolicyManager getDevicePolicyManager() {
+        return mDevicePolicyManager;
+    }
 
 }

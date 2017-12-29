@@ -26,12 +26,13 @@ public class EnableDriveSafeFragment extends Fragment {
     private Button mDevicePolicyManagerBTN;
     private Button mDriveSafeBTN;
     private Button mCloseBTN;
-    private Context mContext;
+
     private Activity mActivity;
 
-    private static final int RESULT_ENABLE = 1;
     private static DevicePolicyManager mDevicePolicyManager;
     private ComponentName mComponentName;
+
+    private static final int RESULT_ENABLE = 1;
 
 
     @Override
@@ -41,12 +42,13 @@ public class EnableDriveSafeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_enable_drive_safe, container, false);
 
-
-        mContext = getActivity();
         mActivity = getActivity();
 
+        mDevicePolicyManager = ((DriveSafeActivity) getActivity()).mDevicePolicyManager;
+        mComponentName = ((DriveSafeActivity) getActivity()).mComponentName;
+
         mDriveSafeBTN = (Button) view.findViewById(R.id.start_obd_service_btn);
-        if (QueryPreferences.isServiceRunning(mContext)) {
+        if (QueryPreferences.isServiceRunning(mActivity)) {
             mDriveSafeBTN.setText("Stop DriveSafe Service");
         } else {
             mDriveSafeBTN.setText("Start DriveSafe Service");
@@ -61,10 +63,9 @@ public class EnableDriveSafeFragment extends Fragment {
         mDevicePolicyManagerBTN = (Button) view.findViewById(R.id.device_policy_manager_btn);
         mCloseBTN = (Button) view.findViewById(R.id.close_btn);
 
-        mDevicePolicyManager = (DevicePolicyManager) mContext.getSystemService(Context.DEVICE_POLICY_SERVICE);
-        mComponentName = new ComponentName(mContext, DevicePolicyWatcher.class);
 
-        if (QueryPreferences.isDevicePolicyManagerOn(mContext)) {
+
+        if (QueryPreferences.isDevicePolicyManagerOn(mActivity)) {
             mDevicePolicyManagerBTN.setText("Disable Locking Capability");
             mDriveSafeBTN.setClickable(true);
             mDriveSafeBTN.setTextColor(Color.parseColor("#000000"));
@@ -74,7 +75,7 @@ public class EnableDriveSafeFragment extends Fragment {
             mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
         }
 
-        if (QueryPreferences.isServiceRunning(mContext)) {
+        if (QueryPreferences.isServiceRunning(mActivity)) {
             mDevicePolicyManagerBTN.setClickable(false);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));
         } else {
@@ -89,11 +90,11 @@ public class EnableDriveSafeFragment extends Fragment {
                 boolean active = mDevicePolicyManager.isAdminActive(mComponentName);
                 if (active) {
                     mDevicePolicyManager.removeActiveAdmin(mComponentName);
-                    onToggleDevicePolicyManager(!active, mContext);
+                    onToggleDevicePolicyManager(!active, mActivity);
                 } else {
                     Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
                     intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
-                    intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Please enable app");
+                    intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Must enable for DriveSafe to work properly");
                     mActivity.startActivityForResult(intent, RESULT_ENABLE);
                 }
             }
@@ -132,16 +133,16 @@ public class EnableDriveSafeFragment extends Fragment {
     }
 
     private void onToggleDriveSafeService() {
-        boolean isRunning = QueryPreferences.isServiceRunning(mContext);
+        boolean isRunning = QueryPreferences.isServiceRunning(mActivity);
 
         if (isRunning) {
-            ObdQueryService.stopDriveSafeService(mContext);
+            ObdQueryService.stopDriveSafeService(mActivity);
             mDriveSafeBTN.setText("Start DriveSafe Service");
             mDevicePolicyManagerBTN.setClickable(true);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#000000"));
             Log.i(TAG, "ObdQueryService Stopped");
         } else {
-            ObdQueryService.startDriveSafeService(mContext);
+            ObdQueryService.startDriveSafeService(mActivity);
             mDriveSafeBTN.setText("Stop DriveSafe Service");
             mDevicePolicyManagerBTN.setClickable(false);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));

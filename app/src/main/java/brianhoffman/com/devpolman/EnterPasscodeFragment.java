@@ -26,7 +26,6 @@ public class EnterPasscodeFragment extends Fragment {
 
     //use SQLite to store hashed password
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

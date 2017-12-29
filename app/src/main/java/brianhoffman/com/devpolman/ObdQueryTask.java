@@ -280,7 +280,7 @@ public class ObdQueryTask extends AsyncTask {
         if (mRpmsOverZero && QueryPreferences.isServiceRunning(mContext)
                 && QueryPreferences.isDevicePolicyManagerOn(mContext)) {
 
-            DevicePolicyManager devman = PhoneLockerActivity.getDevicePolicyManager();
+            DevicePolicyManager devman = DriveSafeActivity.getDevicePolicyManager();
 
             try {
                 devman.lockNow();
