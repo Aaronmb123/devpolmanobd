@@ -14,9 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SetupActivity extends AppCompatActivity {
+public class DriveSafeActivity extends AppCompatActivity {
 
-    private static final String TAG = "SetupActivity";
+    private static final String TAG = "DriveSafeActivity";
     private boolean mIsPasscodeSet;
 
     @Override
