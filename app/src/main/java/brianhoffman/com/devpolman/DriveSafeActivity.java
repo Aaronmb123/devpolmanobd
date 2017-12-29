@@ -49,4 +49,15 @@ public class DriveSafeActivity extends AppCompatActivity {
         return new SetupFragment();
     }
 
+    protected Fragment EnableDriveSafeFragment() {
+
+        return new EnableDriveSafeFragment();
+    }
+
+    protected Fragment BootUpFragment() {
+
+        return new BootUpFragment();
+    }
+
+
 }
