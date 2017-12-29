@@ -17,6 +17,8 @@ import android.widget.Toast;
 public class DriveSafeActivity extends AppCompatActivity {
 
     private static final String TAG = "DriveSafeActivity";
+    private static final String bootUpArg = "QuitDriveSafeActivity";
+
     private boolean mIsPasscodeSet;
 
     @Override
@@ -28,11 +30,16 @@ public class DriveSafeActivity extends AppCompatActivity {
         mIsPasscodeSet = QueryPreferences.isPasscodeSet(this);
         Log.i(TAG, String.valueOf(mIsPasscodeSet));
 
+        // see if intent arg exists
+        boolean phoneRestarted = getIntent().getBooleanExtra(bootUpArg, false);
+
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.activity_passcode_fragment_container);
         if (fragment == null) {
             if (mIsPasscodeSet)
                 fragment = EnterPasscodeFragment();
+            else if (phoneRestarted)
+                fragment = BootUpFragment();
             else
                 fragment = SetupFragment();
             fm.beginTransaction().add(R.id.activity_passcode_fragment_container, fragment).commit();
@@ -47,11 +54,6 @@ public class DriveSafeActivity extends AppCompatActivity {
     protected Fragment SetupFragment() {
 
         return new SetupFragment();
-    }
-
-    protected Fragment EnableDriveSafeFragment() {
-
-        return new EnableDriveSafeFragment();
     }
 
     protected Fragment BootUpFragment() {
