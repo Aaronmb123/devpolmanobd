@@ -8,36 +8,45 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 public class EnableDriveSafeFragment extends Fragment {
 
 
-    private static final String TAG = "PhoneLockerActivity";
+    private static final String TAG = "EnableDriveSafeFragment";
 
     private Button mDevicePolicyManagerBTN;
     private Button mDriveSafeBTN;
     private Button mCloseBTN;
     private Context mContext;
+    private Activity mActivity;
 
     private static final int RESULT_ENABLE = 1;
     private static DevicePolicyManager mDevicePolicyManager;
     private ComponentName mComponentName;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_phone_locker);
 
-        mContext = getApplicationContext();
+        View view = inflater.inflate(R.layout.fragment_enable_drive_safe, container, false);
 
-        mDriveSafeBTN = (Button) findViewById(R.id.start_obd_service_btn);
-        if (QueryPreferences.isServiceRunning(getApplicationContext())) {
+
+        mContext = getActivity();
+        mActivity = getActivity();
+
+        mDriveSafeBTN = (Button) view.findViewById(R.id.start_obd_service_btn);
+        if (QueryPreferences.isServiceRunning(mContext)) {
             mDriveSafeBTN.setText("Stop DriveSafe Service");
         } else {
             mDriveSafeBTN.setText("Start DriveSafe Service");
@@ -49,13 +58,13 @@ public class EnableDriveSafeFragment extends Fragment {
             }
         });
 
-        mDevicePolicyManagerBTN = (Button) findViewById(R.id.device_policy_manager_btn);
-        mCloseBTN = (Button) findViewById(R.id.close_btn);
+        mDevicePolicyManagerBTN = (Button) view.findViewById(R.id.device_policy_manager_btn);
+        mCloseBTN = (Button) view.findViewById(R.id.close_btn);
 
-        mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-        mComponentName = new ComponentName(PhoneLockerActivity.this, DevicePolicyWatcher.class);
+        mDevicePolicyManager = (DevicePolicyManager) mContext.getSystemService(Context.DEVICE_POLICY_SERVICE);
+        mComponentName = new ComponentName(mContext, DevicePolicyWatcher.class);
 
-        if (QueryPreferences.isDevicePolicyManagerOn(getApplicationContext())) {
+        if (QueryPreferences.isDevicePolicyManagerOn(mContext)) {
             mDevicePolicyManagerBTN.setText("Disable Locking Capability");
             mDriveSafeBTN.setClickable(true);
             mDriveSafeBTN.setTextColor(Color.parseColor("#000000"));
@@ -65,7 +74,7 @@ public class EnableDriveSafeFragment extends Fragment {
             mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
         }
 
-        if (QueryPreferences.isServiceRunning(getApplicationContext())) {
+        if (QueryPreferences.isServiceRunning(mContext)) {
             mDevicePolicyManagerBTN.setClickable(false);
             mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));
         } else {
@@ -85,7 +94,7 @@ public class EnableDriveSafeFragment extends Fragment {
                     Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
                     intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
                     intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Please enable app");
-                    startActivityForResult(intent, RESULT_ENABLE);
+                    mActivity.startActivityForResult(intent, RESULT_ENABLE);
                 }
             }
         });
@@ -95,14 +104,17 @@ public class EnableDriveSafeFragment extends Fragment {
             public void onClick(View v) {
 
                 if(android.os.Build.VERSION.SDK_INT >= 21) {
-                    finishAndRemoveTask();
+                    mActivity.finishAndRemoveTask();
                 } else {
-                    finish();
+                    mActivity.finish();
                 }
 
                 return;
             }
         });
+
+        return view;
+
     }
 
     private void onToggleDevicePolicyManager(boolean isActive, Context context) {
@@ -141,48 +153,10 @@ public class EnableDriveSafeFragment extends Fragment {
         return mDevicePolicyManager;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case RESULT_ENABLE:
-                if (resultCode == Activity.RESULT_OK) {
-                    onToggleDevicePolicyManager(true, mContext);
-                } else {
-                    Toast.makeText(this, "Locker not activated!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(android.os.Build.VERSION.SDK_INT >= 21) {
-                finishAndRemoveTask();
-            } else {
-                finish();
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     // onResume update buttons
-
-
     @Override
-    protected void onResume() {
-
-//        Intent intent = getIntent();
-//
-//        if (intent.getBooleanExtra("QuitPhoneLockerActivity", false)) {
-//            Log.i(TAG, "QuitPhoneLockerActivity true... calling onDestroy");
-//            finishAndRemoveTask();
-//        }
-
+    public void onResume() {
         super.onResume();
-
-
+        //toggleButtons
     }
-
 }
