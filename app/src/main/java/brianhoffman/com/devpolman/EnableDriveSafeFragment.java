@@ -83,13 +83,13 @@ public class EnableDriveSafeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(android.os.Build.VERSION.SDK_INT >= 21) {
-                    mActivity.finishAndRemoveTask();
-                } else {
-                    mActivity.finish();
-                }
+            if(android.os.Build.VERSION.SDK_INT >= 21) {
+                mActivity.finishAndRemoveTask();
+            } else {
+                mActivity.finish();
+            }
 
-                return;
+            return;
             }
         });
 
