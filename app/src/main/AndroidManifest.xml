@@ -24,8 +24,6 @@
 
         </activity>
 
-        <activity android:name=".PhoneLockerActivity" />
-
         <receiver
             android:name=".DevicePolicyWatcher"
             android:description="@string/app_description"

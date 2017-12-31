@@ -40,18 +40,19 @@ public class EnterPasscodeFragment extends Fragment {
 
                 String passcode = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(HASHED_PASSCODE, null);
 
-                if (mEnterPasscodeET.getText().toString().equals(passcode)) {
+                //if (mEnterPasscodeET.getText().toString().equals(passcode)) {
 
                     // swap fragments to EnableDriveSafeFragment
                     FragmentManager fm = getActivity().getSupportFragmentManager();
-                    Fragment fragment = new EnterPasscodeFragment();
-                    fm.beginTransaction().add(R.id.activity_passcode_fragment_container, fragment).commit();
+                    Fragment fragment = new EnableDriveSafeFragment();
+                    fm.beginTransaction().add(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
+                    fm.beginTransaction().replace(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
                     Log.i(TAG, "Swapping in EnableDriveSafeFragment");
 
-                } else {
-                    mEnterPasscodeET.setText("");
-                    Toast.makeText(getActivity(),"Passcode Incorrect", Toast.LENGTH_SHORT).show();
-                }
+//                } else {
+//                    mEnterPasscodeET.setText("");
+//                    Toast.makeText(getActivity(),"Passcode Incorrect", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 

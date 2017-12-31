@@ -21,9 +21,7 @@ import android.widget.Toast;
 public class DriveSafeActivity extends AppCompatActivity {
 
     private static final String TAG = "DriveSafeActivity";
-    private static final String bootUpArg = "QuitDriveSafeActivity";
-
-    private boolean mIsPasscodeSet;
+    private static final String ON_BOOT_SCREEN = "StartDriveSafeBootUpScreen";
 
     private static final int RESULT_ENABLE = 1;
     public static DevicePolicyManager mDevicePolicyManager;
@@ -32,28 +30,31 @@ public class DriveSafeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_passcode);
+        setContentView(R.layout.activity_enable_drive_safe);
 
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         mComponentName = new ComponentName(this, DevicePolicyWatcher.class);
 
-        // see if passcode has been created yet
-        mIsPasscodeSet = QueryPreferences.isPasscodeSet(this);
+        // see if phone has been restarted, start black screen
+        boolean phoneRestarted = getIntent().getBooleanExtra(ON_BOOT_SCREEN, false);
+        Log.i(TAG, String.valueOf(phoneRestarted));
+
+        // see if passcode has been created yet, start enter passcode screen
+        boolean mIsPasscodeSet = QueryPreferences.isPasscodeSet(this);
         Log.i(TAG, String.valueOf(mIsPasscodeSet));
 
-        // see if phone has been restarted
-        boolean phoneRestarted = getIntent().getBooleanExtra(bootUpArg, false);
+        mIsPasscodeSet = true;
 
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.activity_passcode_fragment_container);
+        Fragment fragment = fm.findFragmentById(R.id.activity_enable_drive_safe_fragment_container);
         if (fragment == null) {
-            if (mIsPasscodeSet)
-                fragment = EnterPasscodeFragment();
-            else if (phoneRestarted)
+            if (phoneRestarted)
                 fragment = BootUpFragment();
+            else if (mIsPasscodeSet)
+                fragment = EnterPasscodeFragment();
             else
                 fragment = SetupFragment();
-            fm.beginTransaction().add(R.id.activity_passcode_fragment_container, fragment).commit();
+            fm.beginTransaction().add(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
         }
     }
 

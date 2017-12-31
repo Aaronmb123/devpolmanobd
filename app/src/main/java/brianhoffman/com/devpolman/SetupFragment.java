@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class SetupFragment extends Fragment {
+
+    private static final String TAG = "SetupFragment";
+
 
     private static final String HASHED_PASSCODE = "passcode";
 
@@ -33,19 +38,25 @@ public class SetupFragment extends Fragment {
         mDoneBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String enterPasscode = mEnterPasscodeET.getText().toString();
-                String reEnterPassode = mReEnterPasscodeET.getText().toString();
-                if (enterPasscode.equals(reEnterPassode)) {
-                    // hash and save to shared preferences
-                    QueryPreferences.setPasscode(getContext(), enterPasscode);
-                    Intent intent = new Intent(getActivity(), PhoneLockerActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
-                } else {
-                    mEnterPasscodeET.setText("");
-                    mReEnterPasscodeET.setText("");
-                    Toast.makeText(getActivity(), "Passcodes don't match", Toast.LENGTH_SHORT).show();
-                }
+//                String enterPasscode = mEnterPasscodeET.getText().toString();
+//                String reEnterPassode = mReEnterPasscodeET.getText().toString();
+//                if (enterPasscode.equals(reEnterPassode)) {
+                    // hash and save to SQLite
+                    //QueryPreferences.setPasscode(getContext(), enterPasscode);
+
+                // swap fragments to EnableDriveSafeFragment
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                Fragment fragment = new EnableDriveSafeFragment();
+                fm.beginTransaction().add(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
+                fm.beginTransaction().replace(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
+                Log.i(TAG, "Swapping in EnableDriveSafeFragment");
+
+
+//                } else {
+//                    mEnterPasscodeET.setText("");
+//                    mReEnterPasscodeET.setText("");
+//                    Toast.makeText(getActivity(), "Passcodes don't match", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 

@@ -1,5 +1,6 @@
 package brianhoffman.com.devpolman;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,15 @@ public class BootUpFragment extends Fragment {
 
     private TextView mBootSuccessfullTV;
     private Button mOkBTN;
+    private Activity mActivity;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mActivity = getActivity();
+
+    }
 
     @Nullable
     @Override
@@ -26,7 +36,12 @@ public class BootUpFragment extends Fragment {
         mOkBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+
+                if(android.os.Build.VERSION.SDK_INT >= 21) {
+                    mActivity.finishAndRemoveTask();
+                } else {
+                    mActivity.finish();
+                }
             }
         });
 

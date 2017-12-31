@@ -65,23 +65,7 @@ public class EnableDriveSafeFragment extends Fragment {
 
 
 
-        if (QueryPreferences.isDevicePolicyManagerOn(mActivity)) {
-            mDevicePolicyManagerBTN.setText("Disable Locking Capability");
-            mDriveSafeBTN.setClickable(true);
-            mDriveSafeBTN.setTextColor(Color.parseColor("#000000"));
-        } else {
-            mDevicePolicyManagerBTN.setText("Enable Locking Capability");
-            mDriveSafeBTN.setClickable(false);
-            mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
-        }
 
-        if (QueryPreferences.isServiceRunning(mActivity)) {
-            mDevicePolicyManagerBTN.setClickable(false);
-            mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));
-        } else {
-            mDevicePolicyManagerBTN.setClickable(true);
-            mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#000000"));
-        }
 
 
         mDevicePolicyManagerBTN.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +117,7 @@ public class EnableDriveSafeFragment extends Fragment {
     }
 
     private void onToggleDriveSafeService() {
+
         boolean isRunning = QueryPreferences.isServiceRunning(mActivity);
 
         if (isRunning) {
@@ -150,14 +135,34 @@ public class EnableDriveSafeFragment extends Fragment {
         }
     }
 
-    public static DevicePolicyManager getDevicePolicyManager() {
-        return mDevicePolicyManager;
+    private void setButtons() {
+
+        if (QueryPreferences.isDevicePolicyManagerOn(mActivity)) {
+            mDevicePolicyManagerBTN.setText("Disable Locking Capability");
+            mDriveSafeBTN.setClickable(true);
+            mDriveSafeBTN.setTextColor(Color.parseColor("#000000"));
+        } else {
+            mDevicePolicyManagerBTN.setText("Enable Locking Capability");
+            mDriveSafeBTN.setClickable(false);
+            mDriveSafeBTN.setTextColor(Color.parseColor("#708090"));
+        }
+
+        if (QueryPreferences.isServiceRunning(mActivity)) {
+            mDevicePolicyManagerBTN.setClickable(false);
+            mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#708090"));
+        } else {
+            mDevicePolicyManagerBTN.setClickable(true);
+            mDevicePolicyManagerBTN.setTextColor(Color.parseColor("#000000"));
+        }
+
     }
 
-    // onResume update buttons
     @Override
     public void onResume() {
         super.onResume();
-        //toggleButtons
+
+        setButtons();
+
     }
+
 }
