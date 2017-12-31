@@ -1,5 +1,6 @@
 package brianhoffman.com.devpolman;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +20,19 @@ import android.widget.Toast;
 public class EnterPasscodeFragment extends Fragment {
 
     private static final String TAG = "EnterPasscodeFragment";
-
     private static final String HASHED_PASSCODE = "hashedPasscode";
 
     private EditText mEnterPasscodeET;
     private Button mPasscodeBTN;
+    private Activity mActivity;
 
-    //use SQLite to store hashed password
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+
+    }
 
     @Nullable
     @Override
