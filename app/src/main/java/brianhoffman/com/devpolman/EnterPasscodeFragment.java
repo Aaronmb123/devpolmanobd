@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -26,23 +27,6 @@ public class EnterPasscodeFragment extends Fragment {
     private EditText mEnterPasscodeET;
     private Button mPasscodeBTN;
     private Activity mActivity;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                if(android.os.Build.VERSION.SDK_INT >= 21) {
-                    mActivity.finishAndRemoveTask();
-                } else {
-                    mActivity.finish();
-                }
-            }
-        }, 2000);
-
-    }
 
     @Nullable
     @Override
