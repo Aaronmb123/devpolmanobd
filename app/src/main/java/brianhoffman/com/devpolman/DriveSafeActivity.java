@@ -85,6 +85,27 @@ public class DriveSafeActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    // when the enable drive safe fragment is active and the user presses home
+    // or the activity is interrupted, i.e., phone call, etc, the fragment can be
+    // brought back without going through the enter passcode fragment, which
+    // we don't want
+//    @Override
+//    protected void onPause()
+//    {
+//        Log.i(TAG,"Home button pressed");
+//
+//        // if fragment is enablefragment, swap to passcode fragment
+//        FragmentManager fm = getSupportFragmentManager();
+//        Fragment fragment = fm.findFragmentByTag(R.id.activity_enable_drive_safe_fragment_container);
+//        if (fragment == null) {
+//            fragment = EnterPasscodeFragment();
+//
+//            fm.beginTransaction().add(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
+//        }
+//
+//        super.onPause();
+//    }
+
     protected Fragment EnterPasscodeFragment() {
 
         return new EnterPasscodeFragment();

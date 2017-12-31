@@ -63,11 +63,6 @@ public class EnableDriveSafeFragment extends Fragment {
         mDevicePolicyManagerBTN = (Button) view.findViewById(R.id.device_policy_manager_btn);
         mCloseBTN = (Button) view.findViewById(R.id.close_btn);
 
-
-
-
-
-
         mDevicePolicyManagerBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
