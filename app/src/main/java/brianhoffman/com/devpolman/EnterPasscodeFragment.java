@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,16 @@ public class EnterPasscodeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                if(android.os.Build.VERSION.SDK_INT >= 21) {
+                    mActivity.finishAndRemoveTask();
+                } else {
+                    mActivity.finish();
+                }
+            }
+        }, 2000);
 
     }
 
@@ -63,6 +73,9 @@ public class EnterPasscodeFragment extends Fragment {
 //                }
             }
         });
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
 
         return view;
     }

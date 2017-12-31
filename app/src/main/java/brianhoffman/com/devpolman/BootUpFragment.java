@@ -2,6 +2,7 @@ package brianhoffman.com.devpolman;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,19 @@ public class BootUpFragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
+        mActivity = (Activity) getActivity();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                if(android.os.Build.VERSION.SDK_INT >= 21) {
+                    getActivity().finishAndRemoveTask();
+                } else {
+                    getActivity().finish();
+                }
+            }
+        }, 2000);
+
     }
 
 
@@ -32,8 +46,8 @@ public class BootUpFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_boot_up, container, false);
 
-        mBootSuccessfullTV = (TextView) view.findViewById(R.id.boot_up_tv);
-        mOkBTN = (Button) view.findViewById(R.id.boot_up_ok_btn);
+        //mBootSuccessfullTV = (TextView) view.findViewById(R.id.boot_up_tv);
+        //mOkBTN = (Button) view.findViewById(R.id.boot_up_ok_btn);
 
         mOkBTN.setOnClickListener(new View.OnClickListener() {
             @Override
