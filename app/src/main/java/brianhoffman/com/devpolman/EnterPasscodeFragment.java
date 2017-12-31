@@ -47,7 +47,7 @@ public class EnterPasscodeFragment extends Fragment {
                     // swap fragments to EnableDriveSafeFragment
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     Fragment fragment = new EnableDriveSafeFragment();
-                    fm.beginTransaction().add(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
+                    fm.beginTransaction().add(R.id.activity_enable_drive_safe_fragment_container, fragment, "ENABLE_DRIVE_SAFE").commit();
                     fm.beginTransaction().replace(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
                     Log.i(TAG, "Swapping in EnableDriveSafeFragment");
 

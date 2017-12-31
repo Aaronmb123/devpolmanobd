@@ -11,6 +11,7 @@ public class QueryPreferences {
     private static final String PREF_IS_PASSCODE_SET = "isPasscodeSet";
     private static final String PREF_HASHED_PASSCODE = "hashedPasscode";
     private static final String PREF_QUERY_INTERVAL = "queryInterval";
+    private static final String PREF_INTERRUPTED = "appInterrupted";
 
     public static boolean isServiceRunning(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_SERVICE_RUNNING, false);
@@ -56,5 +57,17 @@ public class QueryPreferences {
                 .putInt(PREF_QUERY_INTERVAL, intervalInMillis)
                 .apply();
     }
+
+    public static boolean getInterrupted(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_INTERRUPTED, false);
+    }
+
+    public static void setInterrupted(Context context, boolean isInterrupted) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_INTERRUPTED, isInterrupted)
+                .apply();
+    }
+
 
 }

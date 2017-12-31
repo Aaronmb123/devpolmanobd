@@ -17,6 +17,7 @@ public class DriveSafeActivity extends AppCompatActivity {
 
     private static final String TAG = "DriveSafeActivity";
     private static final String ON_BOOT_SCREEN = "StartDriveSafeBootUpScreen";
+    private static final String PREF_INTERRUPTED = "appInterrupted";
 
     private static final int RESULT_ENABLE = 1;
     public static DevicePolicyManager mDevicePolicyManager;
@@ -66,6 +67,34 @@ public class DriveSafeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.i(TAG,"onResume");
+
+
+        if (QueryPreferences.getInterrupted(this)) {
+            Log.i(TAG,"interrupted: " + String.valueOf(QueryPreferences.getInterrupted(this)) );
+
+            QueryPreferences.setInterrupted(this, false);
+
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment fragment = fm.findFragmentByTag("ENTER_PASSCODE");
+            Log.i(TAG,String.valueOf(fragment));
+
+            if (fragment == null) {
+                fragment = new EnterPasscodeFragment();
+                fm.beginTransaction().add(R.id.activity_enable_drive_safe_fragment_container, fragment, "ENTER_PASSCODE").commit();
+
+            }
+            Log.i(TAG,"swapping in EnterPasscodeFragment");
+            fm.beginTransaction().replace(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
+
+        }
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RESULT_ENABLE:
@@ -79,27 +108,6 @@ public class DriveSafeActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    // when the enable drive safe fragment is active and the user presses home
-    // or the activity is interrupted, i.e., phone call, etc, the fragment can be
-    // brought back without going through the enter passcode fragment, which
-    // we don't want
-//    @Override
-//    protected void onPause()
-//    {
-//        Log.i(TAG,"Home button pressed");
-//
-//        // if fragment is enablefragment, swap to passcode fragment
-//        FragmentManager fm = getSupportFragmentManager();
-//        Fragment fragment = fm.findFragmentByTag(R.id.activity_enable_drive_safe_fragment_container);
-//        if (fragment == null) {
-//            fragment = EnterPasscodeFragment();
-//
-//            fm.beginTransaction().add(R.id.activity_enable_drive_safe_fragment_container, fragment).commit();
-//        }
-//
-//        super.onPause();
-//    }
 
     protected Fragment EnterPasscodeFragment() {
 
@@ -118,6 +126,17 @@ public class DriveSafeActivity extends AppCompatActivity {
 
     public static DevicePolicyManager getDevicePolicyManager() {
         return mDevicePolicyManager;
+    }
+
+    @Override
+    protected void onUserLeaveHint()
+    {
+        super.onUserLeaveHint();
+        Log.i(TAG,"home button pressed");
+
+        QueryPreferences.setInterrupted(this,true);
+
+
     }
 
 }

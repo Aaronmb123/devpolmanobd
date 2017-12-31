@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,6 +24,7 @@ public class EnableDriveSafeFragment extends Fragment {
 
 
     private static final String TAG = "EnableDriveSafeFragment";
+    private static final String PREF_INTERRUPTED = "appInterrupted";
 
     private Button mDevicePolicyManagerBTN;
     private Button mDriveSafeBTN;
@@ -34,7 +36,6 @@ public class EnableDriveSafeFragment extends Fragment {
     private ComponentName mComponentName;
 
     private static final int RESULT_ENABLE = 1;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
