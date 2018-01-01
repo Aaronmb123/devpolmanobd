@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
+import java.util.UUID;
 
 public class ObdQueryTask extends AsyncTask {
 
@@ -92,7 +93,14 @@ public class ObdQueryTask extends AsyncTask {
 
         // connect to bluetooth
         try {
-            mSocket = mDevice.createRfcommSocketToServiceRecord(mDevice.getUuids()[0].getUuid());
+            UUID bluetoothUuid;
+            try {
+               bluetoothUuid = mDevice.getUuids()[0].getUuid();
+            } catch (Exception e) {
+                Log.e(TAG, "Bluetooth was turned off while attempting to connect");
+                return null;
+            }
+            mSocket = mDevice.createRfcommSocketToServiceRecord(bluetoothUuid);
         } catch (IOException e) {
             Log.e(TAG, "Could not create RF Comm Socket");
             return null;
