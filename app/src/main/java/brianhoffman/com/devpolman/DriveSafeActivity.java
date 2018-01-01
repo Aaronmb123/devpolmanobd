@@ -39,8 +39,6 @@ public class DriveSafeActivity extends AppCompatActivity {
         boolean mIsPasscodeSet = QueryPreferences.isPasscodeSet(this);
         Log.i(TAG, String.valueOf(mIsPasscodeSet));
 
-        mIsPasscodeSet = true;
-
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.activity_enable_drive_safe_fragment_container);
         if (fragment == null) {
@@ -73,10 +71,10 @@ public class DriveSafeActivity extends AppCompatActivity {
         Log.i(TAG,"onResume");
 
 
-        if (QueryPreferences.getInterrupted(this)) {
-            Log.i(TAG,"interrupted: " + String.valueOf(QueryPreferences.getInterrupted(this)) );
+        if (QueryPreferences.getActivityInterrupted(this)) {
+            Log.i(TAG,"interrupted: " + String.valueOf(QueryPreferences.getActivityInterrupted(this)) );
 
-            QueryPreferences.setInterrupted(this, false);
+            QueryPreferences.setActivityInterrupted(this, false);
 
             FragmentManager fm = getSupportFragmentManager();
             Fragment fragment = fm.findFragmentByTag("ENTER_PASSCODE");
@@ -129,13 +127,11 @@ public class DriveSafeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onUserLeaveHint()
-    {
+    protected void onUserLeaveHint() {
         super.onUserLeaveHint();
         Log.i(TAG,"home button pressed");
 
-        QueryPreferences.setInterrupted(this,true);
-
+        QueryPreferences.setActivityInterrupted(this,true);
 
     }
 

@@ -88,7 +88,7 @@ public class EnableDriveSafeFragment extends Fragment {
             if(android.os.Build.VERSION.SDK_INT >= 21) {
                 mActivity.finishAndRemoveTask();
             } else {
-                QueryPreferences.setInterrupted(mActivity,true);
+                QueryPreferences.setActivityInterrupted(mActivity,true);
                 mActivity.finish();
             }
 

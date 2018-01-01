@@ -58,11 +58,11 @@ public class QueryPreferences {
                 .apply();
     }
 
-    public static boolean getInterrupted(Context context) {
+    public static boolean getActivityInterrupted(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_INTERRUPTED, false);
     }
 
-    public static void setInterrupted(Context context, boolean isInterrupted) {
+    public static void setActivityInterrupted(Context context, boolean isInterrupted) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(PREF_INTERRUPTED, isInterrupted)
