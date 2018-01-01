@@ -12,6 +12,7 @@ public class QueryPreferences {
     private static final String PREF_HASHED_PASSCODE = "hashedPasscode";
     private static final String PREF_QUERY_INTERVAL = "queryInterval";
     private static final String PREF_INTERRUPTED = "appInterrupted";
+    private static final String PREF_ENABLE_DEVPOLMAN_BUTTON = "enableDePolManButton";
 
     public static boolean isServiceRunning(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_IS_SERVICE_RUNNING, false);
@@ -66,6 +67,17 @@ public class QueryPreferences {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(PREF_INTERRUPTED, isInterrupted)
+                .apply();
+    }
+
+    public static boolean getEnableDevPolManButtonCalled(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_ENABLE_DEVPOLMAN_BUTTON, false);
+    }
+
+    public static void setEnableDevPolManButtonCalled(Context context, boolean buttonClicked) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_ENABLE_DEVPOLMAN_BUTTON, buttonClicked)
                 .apply();
     }
 

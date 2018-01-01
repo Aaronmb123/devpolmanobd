@@ -1,6 +1,7 @@
 package brianhoffman.com.devpolman;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -70,6 +71,7 @@ public class DriveSafeActivity extends AppCompatActivity {
 
         Log.i(TAG,"onResume");
 
+        QueryPreferences.setEnableDevPolManButtonCalled(this, false);
 
         if (QueryPreferences.getActivityInterrupted(this)) {
             Log.i(TAG,"interrupted: " + String.valueOf(QueryPreferences.getActivityInterrupted(this)) );
@@ -131,7 +133,8 @@ public class DriveSafeActivity extends AppCompatActivity {
         super.onUserLeaveHint();
         Log.i(TAG,"home button pressed");
 
-        QueryPreferences.setActivityInterrupted(this,true);
+        if (!QueryPreferences.getEnableDevPolManButtonCalled(this))
+            QueryPreferences.setActivityInterrupted(this,true);
 
     }
 

@@ -73,6 +73,7 @@ public class EnableDriveSafeFragment extends Fragment {
                     mDevicePolicyManager.removeActiveAdmin(mComponentName);
                     onToggleDevicePolicyManager(!active, mActivity);
                 } else {
+                    QueryPreferences.setEnableDevPolManButtonCalled(mActivity, true);
                     Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
                     intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
                     intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Must enable for DriveSafe to work properly");
